@@ -1,0 +1,22 @@
+{
+  "timezone":"America/Bogota",
+  "fromAdmin":true,
+  "appMode":"iadmin",
+  "locale":"en",
+  "authProvider":"local"
+ }
+ &take=15
+ &page=1
+ &filter={"me":true,"type":"broadcast"}
+
+
+ {
+   "timezone":"America/Bogota",
+   "fromAdmin":true,
+   "appMode":"iadmin",
+   "authProvider":"local",
+   "locale":"en"
+   }
+   &take=15
+   &page=1
+   &filter={"me":true,"type":"broadcast"}

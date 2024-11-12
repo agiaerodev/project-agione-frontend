@@ -1,8 +1,8 @@
 {
-  "name": "imagina-cms",
-  "version": "3.0.45",
-  "description": "A Imagina Project",
-  "productName": "Imagina CMS",
+  "name": "admin-quasar",
+  "version": "3.0.10",
+  "description": "A Quasar Project",
+  "productName": "AGIONE APP",
   "author": "msolanogithub <msolano@imaginacolombia.com>",
   "private": true,
   "scripts": {
@@ -45,7 +45,6 @@
     "terser-webpack-plugin": "^5.3.10",
     "vue": "3.4.15",
     "vue-advanced-chat": "^2.0.10",
-    "vue-cal": "^4.10.0",
     "vue-chartjs": "^5.3.0",
     "vue-chartjs-exporter": "^1.0.2",
     "vue-cropperjs": "^5.0.0",
@@ -56,7 +55,9 @@
     "vue-signature-pad": "^3.0.2",
     "vuedraggable": "^4.1.0",
     "vuex": "^4.0.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "echarts": "^5.5.1",
+    "vue-echarts": "^7.0.3"
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.9.2",

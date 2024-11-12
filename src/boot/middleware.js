@@ -36,17 +36,22 @@ class Middleware {
 
   //CHeck login
   checkLogin() {
-    return new Promise(async resolve => {
-      // Validate auth
-      let isAuthenticated = process.env.CLIENT ? this.store.state.quserAuth.authenticated : true;
-      //try login
-      if (!isAuthenticated) isAuthenticated = await this.store.dispatch('quserAuth/AUTH_TRYAUTOLOGIN');
-      //Update user data
-      else this.store.dispatch('quserAuth/AUTH_UPDATE');
-      //Check if should change password
-      this.store.dispatch('quserAuth/AUTH_FORCE_PASSWORD');
-      //Response
-      resolve(isAuthenticated);
+    return new Promise(async (resolve, reject) => {
+      try {
+        // Validate auth
+        let isAuthenticated = process.env.CLIENT ? this.store.state.quserAuth.authenticated : true;
+        //try login
+        if (!isAuthenticated) isAuthenticated = await this.store.dispatch('quserAuth/AUTH_TRYAUTOLOGIN');
+        //Update user data
+        else this.store.dispatch('quserAuth/AUTH_UPDATE');
+        //Check if should change password
+        this.store.dispatch('quserAuth/AUTH_FORCE_PASSWORD');
+        //Response
+        resolve(isAuthenticated);
+      } catch (error) {
+        console.error('Error on check login', error);
+        reject(error);
+      }
     });
   }
 
@@ -178,34 +183,40 @@ class Middleware {
 
   //go to next route
   goToNextRoute(to, from, next) {
-    let locale = (from && from.name) ? helper.getLocaleRouteName(from.name) : false;//Locale to route
-    let nextRoute = (this.redirectTo && (this.redirectTo.name != to.name)) ? this.redirectTo : to;//Get next route
-    this.store.commit('qsiteApp/SET_CURRENT_ROUTE', (nextRoute));//Update current route
+    try {
+      let locale = (from && from.name) ? helper.getLocaleRouteName(from.name) : false;//Locale to route
+      let nextRoute = (this.redirectTo && (this.redirectTo.name != to.name)) ? this.redirectTo : to;//Get next route
+      this.store.commit('qsiteApp/SET_CURRENT_ROUTE', (nextRoute));//Update current route
 
-    //Validate if require locale
-    if (locale && !helper.getLocaleRouteName(nextRoute.name)) {
-      nextRoute = { ...nextRoute, name: `${locale}.${nextRoute.name}` };
+      //Validate if require locale
+      if (locale && !helper.getLocaleRouteName(nextRoute.name)) {
+        nextRoute = { ...nextRoute, name: `${locale}.${nextRoute.name}` };
+      }
+
+      //Remove authbearer from url
+      if (to.query.authbearer) {
+        delete to.query.expiresatbearer;
+        delete to.query.authbearer;
+        return next(to)
+      }
+
+      //Include fromVueRoter to updatePage
+      if (to.name == 'app.update.app' && !to.query.updated && from.name != 'app.update.app') {
+        if(from.name) to.query.fromVueRoute = from.name;
+        to.query.fromVueRouteParams = JSON.stringify(from.params);
+        to.query.fromVueRouteQuery = JSON.stringify(from.query);
+        to.query.updated = '1';
+        to.fullPath = `${to.path}?${Object.entries(to.query).map(([key, value]) => `${key}=${value}`).join('&')}`;
+      }
+
+      //Go to route
+      if (nextRoute.name == to.name) return next();
+      if (from.name != nextRoute.name) return next(nextRoute);
+      return next(false);
+    } catch (err) {
+      console.error('Navigation error:', err);
+      return next(false);
     }
-
-    //Remove authbearer from url
-    if (to.query.authbearer) {
-      delete to.query.expiresatbearer;
-      delete to.query.authbearer;
-      return this.router.push(to);
-    }
-
-    //Include fromVueRoter to updatePage
-    if (to.name == 'app.update.app' && !to.query.updated && from.name != 'app.update.app') {
-      if(from.name) to.query.fromVueRoute = from.name;
-      to.query.fromVueRouteParams = JSON.stringify(from.params);
-      to.query.fromVueRouteQuery = JSON.stringify(from.query);
-      to.query.updated = '1';
-      to.fullPath = `${to.path}?${Object.entries(to.query).map(([key, value]) => `${key}=${value}`).join('&')}`;
-    }
-
-    //Go to route
-    if (nextRoute.name == to.name) return next();
-    if (from.name != nextRoute.name) return this.router.push(nextRoute);
   }
 }
 
@@ -217,21 +228,26 @@ export default async ({ router, store, app }) => {
 
   //Handler to any route
   router.beforeEach(async (to, from, next) => {
-    middleware.redirectTo = false;//Reset redirect to
+    try {
+      middleware.redirectTo = false;//Reset redirect to
 
-    //Set previous path
-    to.meta.previousPath = from.path;
+      //Set previous path
+      to.meta.previousPath = from.path;
 
-    //Validate if go to next route
-    if (!middleware.allowNavigate) {
-      middleware.allowNavigate = true;
-      next(false);
+      //Validate if go to next route
+      if (!middleware.allowNavigate) {
+        middleware.allowNavigate = true;
+        return next(false);
+      }
+
+      //Validate route authentication and permissions
+      await middleware.validateRoute(to, from);
+
+      //Go to next route
+      middleware.goToNextRoute(to, from, next);
+    } catch (err) {
+      console.error('Navigation error:', err);
+      return next(false);
     }
-
-    //Validate route authentication and permissions
-    await middleware.validateRoute(to, from);
-
-    //Go to next route
-    middleware.goToNextRoute(to, from, next);
   });
 }

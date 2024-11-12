@@ -15,13 +15,13 @@ if (loadFrom) {
 }
 
 export default {
-  //baseUrl: 'https://ibuilder.ozonohosting.com',
+  baseUrl: 'https://app-agione-stag-v8-use3-01.azurewebsites.net',
   version: pjson.version,//Package version
   mode,//Define load mode
   productFrom,//Define load as product
   validateModeAccess: true,//Define if validate app mode access
   forceRoleAndDepartment: false,//Force to select role and department
-  //useLocalTranslations: true,//Define from where use the translations
+  useLocalTranslations: true,//Define from where use the translations
   //UI Languages
   languages: {
     default: 'es',

@@ -1,0 +1,1 @@
+https://agionedev.azurewebsites.net/api/notification/v1/notifications?setting=%7B%22timezone%22%3A%22America%2FBogota%22%2C%22fromAdmin%22%3Atrue%2C%22appMode%22%3A%22iadmin%22%2C%22authProvider%22%3A%22local%22%2C%22locale%22%3A%22en%22%7D&take=15&page=1&filter=%7B%22me%22%3Atrue%2C%22type%22%3A%22broadcast%22%7D

@@ -66,6 +66,7 @@ module.exports = configure(function(ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
+      extractCSS: false,
       vueLoaderOptions: {
         // Options for vue-template-compiler
         compilerOptions: {
@@ -232,8 +233,8 @@ module.exports = configure(function(ctx) {
     pwa: {
       workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
-        maximumFileSizeToCacheInBytes: 1024 * 1024 * 10, // 10MB
-        exclude: [/node_modules/, /manifest\.json/],
+        maximumFileSizeToCacheInBytes: 1024 * 1024 * 10,
+        exclude: [/node_modules/, /manifest\.json/, /src_pages_updateApp_vue\.js/, /src_pages_404_vue\.js/],
       }, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
@@ -241,40 +242,39 @@ module.exports = configure(function(ctx) {
       // chainWebpackCustomSW (/* chain */) {},
 
       manifest: {
-        name: 'Imagina APP',
-        short_name: 'Imagina APP',
-        description: '',
+        name: 'AGIONE APP',
+        short_name: 'AGIONE APP',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#ffffff',
+        theme_color: '#28489a',
         icons: [
           {
-            src: 'icons/icon-128x128.png',
-            sizes: '128x128',
-            type: 'image/png'
+            'src': 'icons/icon-128x128.jpg',
+            'sizes': '128x128',
+            'type': 'image/png'
           },
           {
-            src: 'icons/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            'src': 'icons/icon-192x192.jpg',
+            'sizes': '192x192',
+            'type': 'image/png'
           },
           {
-            src: 'icons/icon-256x256.png',
-            sizes: '256x256',
-            type: 'image/png'
+            'src': 'icons/icon-256x256.jpg',
+            'sizes': '256x256',
+            'type': 'image/png'
           },
           {
-            src: 'icons/icon-384x384.png',
-            sizes: '384x384',
-            type: 'image/png'
+            'src': 'icons/icon-384x384.jpg',
+            'sizes': '384x384',
+            'type': 'image/png'
           },
           {
-            src: 'icons/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            'src': 'icons/icon-512x512.jpg',
+            'sizes': '512x512',
+            'type': 'image/png'
           }
-        ]
+        ],
       },
       metaVariables: {
         appleMobileWebAppCapable: false, // set this to false to avoid deprecated tag
