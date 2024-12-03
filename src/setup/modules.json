@@ -1,0 +1,29 @@
+{
+    "modules": [
+        "qcrud",
+        "qblog",
+        "qgamification",
+        "qchat",
+        "quser",
+        "qnotification",
+        "qform",
+        "qpage",
+        "qmenu",
+        "qtranslation",
+        "qsite",
+        "qfly",
+        "qramp",
+        "qsetupagione",
+        "qcargoagione",
+        "qdhlagione",
+        "qoffline",
+        "qreports",
+        "quickbase"
+    ],
+    "default": [
+        "qmedia",
+        "qcheckin",
+        "qqreable",
+        "qrequestable"
+    ]
+}
