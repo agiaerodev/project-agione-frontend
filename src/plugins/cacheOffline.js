@@ -23,7 +23,7 @@ class cacheOffline {
     const cacheResponse = await this.getDataIntoObject(apiRoute);
     
     Object.keys(cacheResponse).map(key => { 
-      if (Array.isArray(cacheResponse[key].data)) data.push(...cacheResponse[key].data) 
+      if (Array.isArray(cacheResponse[key]?.data)) data.push(...cacheResponse[key]?.data) 
     })
 
     return { data };
@@ -31,10 +31,10 @@ class cacheOffline {
 
   async addNewRecord(apiRoute = null, data = {}) {
     const route = `${apiRoute}::offline`
-    const cacheResponse = await this.getAllList(route);
+    const cacheResponse = await cache.get.item(route);
+    if (!cacheResponse) return;
     const dataInCache = structuredClone(cacheResponse);
     
-    await cache.remove(route);
     dataInCache.data.unshift({ ...data });
     await cache.set(route, dataInCache);
     return true;
@@ -81,7 +81,7 @@ class cacheOffline {
     const dataInCache = structuredClone(cacheResponse);
 
     Object.keys(dataInCache).map(async key => {
-      if (!Array.isArray(dataInCache[key].data)) return;
+      if (!Array.isArray(dataInCache[key]?.data)) return;
       const index = dataInCache[key].data.findIndex(
         item => String(item.id) === String(itemId)
       );
