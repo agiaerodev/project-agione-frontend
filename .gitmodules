@@ -46,3 +46,21 @@
 [submodule "src/modules/qqreable"]
 	path = src/modules/qqreable
 	url = https://github.com/agionedev/qqreable.git
+[submodule "src/modules/quickbase"]
+	path = src/modules/quickbase
+	url = https://github.com/agionedev/quickbase.git
+[submodule "src/modules/qsetupagione"]
+	path = src/modules/qsetupagione
+	url = https://github.com/agionedev/qsetupagione.git
+[submodule "src/modules/qramp"]
+	path = src/modules/qramp
+	url = https://github.com/agionedev/qramp.git
+[submodule "src/modules/qdhlagione"]
+	path = src/modules/qdhlagione
+	url = https://github.com/agionedev/qdhlagione.git
+[submodule "src/modules/qfly"]
+	path = src/modules/qfly
+	url = https://github.com/agionedev/qfly.git
+[submodule "src/modules/qcargoagione"]
+	path = src/modules/qcargoagione
+	url = https://github.com/agionedev/qcargoagione.git
