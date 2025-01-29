@@ -1,123 +1,48 @@
 [submodule "src/modules/qcrud"]
 	path = src/modules/qcrud
-	url = https://github.com/imagina/qcrud.git
+	url = https://github.com/agiaerodev/qcrud.git
 [submodule "src/modules/qgamification"]
 	path = src/modules/qgamification
-	url = https://github.com/imagina/qgamification.git
+	url = https://github.com/agiaerodev/qgamification.git
 [submodule "src/modules/qmedia"]
 	path = src/modules/qmedia
-	url = https://github.com/imagina/qmedia.git
+	url = https://github.com/agiaerodev/qmedia.git
 [submodule "src/modules/qnotification"]
 	path = src/modules/qnotification
-	url = https://github.com/imagina/qnotification.git
+	url = https://github.com/agiaerodev/qnotification.git
 [submodule "src/modules/qsite"]
 	path = src/modules/qsite
-	url = https://github.com/imagina/qsite.git
+	url = https://github.com/agiaerodev/qsite.git
 [submodule "src/modules/quser"]
 	path = src/modules/quser
-	url = https://github.com/imagina/quser.git
+	url = https://github.com/agiaerodev/quser.git
 [submodule "src/modules/qchat"]
 	path = src/modules/qchat
-	url = https://github.com/imagina/qchat.git
+	url = https://github.com/agiaerodev/qchat.git
 [submodule "src/modules/qtranslation"]
 	path = src/modules/qtranslation
-	url = https://github.com/imagina/qtranslation.git
+	url = https://github.com/agiaerodev/qtranslation.git
 [submodule "src/modules/qcheckin"]
 	path = src/modules/qcheckin
-	url = https://github.com/imagina/qcheckin.git
+	url = https://github.com/agiaerodev/qcheckin.git
 [submodule "src/modules/qoffline"]
 	path = src/modules/qoffline
-	url = https://github.com/imagina/qoffline.git
-[submodule "src/modules/qad"]
-	path = src/modules/qad
-	url = https://github.com/imagina/qad.git
-[submodule "src/modules/qappointment"]
-	path = src/modules/qappointment
-	url = https://github.com/imagina/qappointment.git
-[submodule "src/modules/qauction"]
-	path = src/modules/qauction
-	url = https://github.com/imagina/qauction.git
-[submodule "src/modules/qbanner"]
-	path = src/modules/qbanner
-	url = https://github.com/imagina/qbanner.git
+	url = https://github.com/agiaerodev/qoffline.git
 [submodule "src/modules/qblog"]
 	path = src/modules/qblog
-	url = https://github.com/imagina/qblog.git
-[submodule "src/modules/qbooking"]
-	path = src/modules/qbooking
-	url = https://github.com/imagina/qbooking.git
-[submodule "src/modules/qbuilder"]
-	path = src/modules/qbuilder
-	url = https://github.com/imagina/qbuilder.git
-[submodule "src/modules/qcommerce"]
-	path = src/modules/qcommerce
-	url = https://github.com/imagina/qcommerce.git
-[submodule "src/modules/qcredit"]
-	path = src/modules/qcredit
-	url = https://github.com/imagina/qcredit.git
-[submodule "src/modules/qdocument"]
-	path = src/modules/qdocument
-	url = https://github.com/imagina/qdocument.git
-[submodule "src/modules/qevent"]
-	path = src/modules/qevent
-	url = https://github.com/imagina/qevent.git
+	url = https://github.com/agiaerodev/qblog.git
 [submodule "src/modules/qform"]
 	path = src/modules/qform
-	url = https://github.com/imagina/qform.git
-[submodule "src/modules/qlocations"]
-	path = src/modules/qlocations
-	url = https://github.com/imagina/qlocations.git
+	url = https://github.com/agiaerodev/qform.git
 [submodule "src/modules/qmenu"]
 	path = src/modules/qmenu
-	url = https://github.com/imagina/qmenu.git
+	url = https://github.com/agiaerodev/qmenu.git
 [submodule "src/modules/qpage"]
 	path = src/modules/qpage
-	url = https://github.com/imagina/qpage.git
-[submodule "src/modules/qplace"]
-	path = src/modules/qplace
-	url = https://github.com/imagina/qplace.git
-[submodule "src/modules/qplan"]
-	path = src/modules/qplan
-	url = https://github.com/imagina/qplan.git
+	url = https://github.com/agiaerodev/qpage.git
 [submodule "src/modules/qqreable"]
 	path = src/modules/qqreable
-	url = https://github.com/imagina/qqreable.git
-[submodule "src/modules/qredirect"]
-	path = src/modules/qredirect
-	url = https://github.com/imagina/qredirect.git
+	url = https://github.com/agiaerodev/qqreable.git
 [submodule "src/modules/qrequestable"]
 	path = src/modules/qrequestable
-	url = https://github.com/imagina/qrequestable.git
-[submodule "src/modules/qslider"]
-	path = src/modules/qslider
-	url = https://github.com/imagina/qslider.git
-[submodule "src/modules/qwebhook"]
-	path = src/modules/qwebhook
-	url = https://github.com/imagina/qwebhook.git
-[submodule "src/modules/qaccounting"]
-	path = src/modules/qaccounting
-	url = https://github.com/imagina/qaccounting.git
-[submodule "src/modules/qtask"]
-	path = src/modules/qtask
-	url = https://github.com/imagina/qtask.git
-[submodule "src/modules/qcomment"]
-	path = src/modules/qcomment
-	url = https://github.com/imagina/qcomment.git
-[submodule "src/modules/qtelemetry"]
-	path = src/modules/qtelemetry
-	url = https://github.com/imagina/qtelemetry.git
-[submodule "src/modules/qwallet"]
-	path = src/modules/qwallet
-	url = https://github.com/imagina/qwallet.git
-[submodule "src/modules/qretail"]
-	path = src/modules/qretail
-	url = https://github.com/imagina/qretail.git
-[submodule "src/modules/qproduct"]
-	path = src/modules/qproduct
-	url = https://github.com/imagina/qproduct.git
-[submodule "src/modules/qorder"]
-	path = src/modules/qorder
-	url = https://github.com/imagina/qorder.git
-[submodule "src/modules/qprice"]
-	path = src/modules/qprice
-	url = https://github.com/imagina/qprice.git
+	url = https://github.com/agiaerodev/qrequestable.git
