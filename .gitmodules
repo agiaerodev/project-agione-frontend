@@ -46,3 +46,6 @@
 [submodule "src/modules/qrequestable"]
 	path = src/modules/qrequestable
 	url = https://github.com/agiaerodev/qrequestable.git
+[submodule "src/modules/quickbase"]
+	path = src/modules/quickbase
+	url = https://github.com/agiaerodev/quickbase.git
