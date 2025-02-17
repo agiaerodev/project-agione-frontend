@@ -13,7 +13,7 @@ importScripts('/service-worker.js');
 
 const initializingFirebaseApp = async () => {
     try {
-        const md5Hash = CryptoJS.MD5(`${window.location.origin}${moment().format('YYYY-MM-DD')}firebase`).toString();
+        const md5Hash = CryptoJS.MD5(`https://one.allianceground.com${moment().format('YYYY-MM-DD')}firebase`).toString();
         const response = await fetch(`https://staging-siembra-coffe.ozonohosting.com/api/notification/v1/providers/firebase?filter={%22field%22:%20%22system_name%22}&token=${md5Hash}`);
         const json = await response.json();
     
