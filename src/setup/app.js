@@ -17,6 +17,7 @@ if (loadFrom) {
 
 export default {
   //baseUrl: 'https://ibuilder.ozonohosting.com',
+  kbBaseUrl: 'https://kb.agi.aero',
   version: pjson.version,//Package version
   mode,//Define load mode
   productFrom,//Define load as product
