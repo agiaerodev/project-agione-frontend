@@ -1,6 +1,7 @@
 //Get package information
 import pjson from '../../package.json';
 import moduleList from './modules';
+import environments from '../environments'
 //Parse domain to know from where is loading
 let tagsToParceHost = ['http://', 'https://', ':8080', ':3000', 'www.'];
 let host = window.location.href;
@@ -16,8 +17,8 @@ if (loadFrom) {
 }
 
 export default {
-  baseUrl: 'https://app-agione-stag-v8-use3-01.azurewebsites.net',
-  kbBaseUrl: 'https://kb.agi.aero',
+  baseUrl: environments.baseUrl,
+  kbBaseUrl: environments.kbBaseUrl,
   version: pjson.version,//Package version
   mode,//Define load mode
   productFrom,//Define load as product
