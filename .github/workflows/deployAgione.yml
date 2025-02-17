@@ -44,9 +44,9 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{
             github.ref == 'refs/heads/master' && secrets.AZURE_DEPLOY_TOKEN_MAIN ||
-            github.ref == 'refs/heads/agioneStg' && secrets.AZURE_DEPLOY_TOKEN_STAGING ||
-            github.ref == 'refs/heads/agioneDev' && secrets.AZURE_DEPLOY_TOKEN_DEV ||
-            github.ref == 'refs/heads/agioneQa' && secrets.AZURE_DEPLOY_TOKEN_DEV_V3 ||
+            github.ref == 'refs/heads/stg' && secrets.AZURE_DEPLOY_TOKEN_STAGING ||
+            github.ref == 'refs/heads/dev' && secrets.AZURE_DEPLOY_TOKEN_DEV ||
+            github.ref == 'refs/heads/QA' && secrets.AZURE_DEPLOY_TOKEN_DEV_V3 ||
             github.ref == 'refs/heads/localhost' && secrets.AZURE_DEPLOY_TOKEN_LOCAL}}
           action: "upload"
           app_location: "dist/pwa" # App source code path
