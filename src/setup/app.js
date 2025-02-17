@@ -16,7 +16,7 @@ if (loadFrom) {
 }
 
 export default {
-  //baseUrl: 'https://ibuilder.ozonohosting.com',
+  baseUrl: 'https://app-agione-stag-v8-use3-01.azurewebsites.net',
   kbBaseUrl: 'https://kb.agi.aero',
   version: pjson.version,//Package version
   mode,//Define load mode
