@@ -1,4 +1,5 @@
-import { alert, i18n } from 'src/plugins/utils'
+import { alert, i18n, cache } from 'src/plugins/utils'
+import app from '/src/setup/app.js'
 
 class Helper {
   constructor() {
@@ -681,7 +682,6 @@ class Helper {
 
     return result;
   }
-  // Detect Device
   detectDevice() {
     const userAgent = navigator.userAgent.toLowerCase();
 
@@ -716,10 +716,31 @@ class Helper {
 
     return `${device} ${version}`;
   }
-
-  deleteHtml(data) {
-    if (!data) return '';
-    return typeof data === 'string' ? data.replace(/<[^>]+>/g, '') : data;
+  documentationLink(path, token) {
+    const baseUrl = app.kbBaseUrl
+    
+    const url = `${baseUrl}${path}`
+    const parsedUrl = new URL(url);
+    const hash = parsedUrl.hash ? parsedUrl.hash : ''
+    const href = `${url.replace(/#.*$/, '')}?token=${token}${hash}`
+    
+    return (`
+      <a 
+      href='${href}'
+      target='_blank'
+      class='tw-text-blue-500'>
+        Learn more
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </a>
+    `)
+  }
+  async getToken() {
+    try {
+      const sessionData = await cache.get.item('sessionData')
+      return sessionData.userToken.replace('Bearer ', '')
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
