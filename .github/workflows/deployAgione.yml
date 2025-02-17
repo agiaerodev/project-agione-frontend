@@ -22,6 +22,27 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "20"
+      - name: Debug environment setup
+        run: |
+          echo "Current branch: ${{ github.ref }}"
+          echo "Setting up environment file..."
+
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "Using production environment"
+            cp src/environments/environment.prod.ts src/environments/environment.ts
+          elif [[ "${{ github.ref }}" == "refs/heads/stg" ]]; then
+            echo "Using staging environment"
+            cp src/environments/environment.stg.ts src/environments/environment.ts
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "Using development environment"
+            cp src/environments/environment.dev.ts src/environments/environment.ts
+          elif [[ "${{ github.ref }}" == "refs/heads/QA" ]]; then
+            echo "Using QA environment"
+            cp src/environments/environment.qa.ts src/environments/environment.ts
+          elif [[ "${{ github.ref }}" == "refs/heads/localhost" ]]; then
+            echo "Using localhost environment"
+            cp src/environments/environment.localhost.ts src/environments/environment.ts
+          fi
       - name: Install Quasar CLI
         run: |
           npm cache clean --force
