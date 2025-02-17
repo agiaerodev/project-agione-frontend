@@ -1,7 +1,7 @@
 //Get package information
 import pjson from '../../package.json';
 import moduleList from './modules';
-import environments from '../environments'
+import environments from '../environments/environment'
 //Parse domain to know from where is loading
 let tagsToParceHost = ['http://', 'https://', ':8080', ':3000', 'www.'];
 let host = window.location.href;
