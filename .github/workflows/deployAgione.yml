@@ -53,9 +53,11 @@ jobs:
           npm install
       - name: Initialize and update submodules
         run: |
+          branch="staging"
+          [ "${{ github.ref }}" == "refs/heads/master" ] && branch="master"
           git submodule update --init --remote
           git submodule foreach --recursive git fetch
-          git submodule foreach --recursive git checkout staging
+          git submodule foreach --recursive git checkout $branch
           git -C src/modules/qcrud checkout dashboard_merge_stg
           git -C src/modules/qsite checkout dashboard_merge_stg
       - name: Build Agione
@@ -67,7 +69,7 @@ jobs:
             github.ref == 'refs/heads/master' && secrets.AZURE_DEPLOY_TOKEN_MAIN ||
             github.ref == 'refs/heads/stg' && secrets.AZURE_DEPLOY_TOKEN_STAGING ||
             github.ref == 'refs/heads/dev' && secrets.AZURE_DEPLOY_TOKEN_DEV ||
-            github.ref == 'refs/heads/QA' && secrets.AZURE_DEPLOY_TOKEN_DEV_V3 ||
+            github.ref == 'refs/heads/QA' && secrets.AZURE_DEPLOY_TOKEN_QA ||
             github.ref == 'refs/heads/localhost' && secrets.AZURE_DEPLOY_TOKEN_LOCAL}}
           action: "upload"
           app_location: "dist/pwa" # App source code path
