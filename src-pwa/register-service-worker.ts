@@ -30,7 +30,6 @@ register(process.env.SERVICE_WORKER_FILE, {
 
   updated (/* registration */) {
     console.log('New content is available; please refresh.')
-    setTimeout(() => eventBus.emit('service-worker.update.available'), 3000);
   },
 
   offline () {
