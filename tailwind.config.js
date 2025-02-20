@@ -24,10 +24,29 @@ Object.keys(colors).forEach((colorKey) => {
   }
 });
 
+const breakpointPrefix = ['sm', 'md', 'lg', 'xl', '2xl'];
+
+const colClasses = [
+  'tw-col-span-full',
+  'sm:tw-col-span-full',
+  'md:tw-col-span-full',
+  'lg:tw-col-span-full',
+  'xl:tw-col-span-full',
+  '2xl:tw-col-span-full',
+  ...Array.from({ length: 12 }, (_, i) => `tw-col-span-${i + 1}`),
+  ...breakpointPrefix.map((prefix) => Array.from({ length: 12 }, (_, i) => `${prefix}:tw-col-span-${i + 1}`)).flat(),
+
+  ...Array.from({ length: 12 }, (_, i) => `tw-col-start-${i + 1}`),
+  ...breakpointPrefix.map((prefix) => Array.from({ length: 12 }, (_, i) => `${prefix}:tw-col-start-${i + 1}`)).flat(),
+
+  ...Array.from({ length: 12 }, (_, i) => `tw-col-end-${i + 1}`),
+  ...breakpointPrefix.map((prefix) => Array.from({ length: 12 }, (_, i) => `${prefix}:tw-col-end-${i + 1}`)).flat(),
+];
+
 module.exports = {
   prefix: 'tw-',
   content: ["./src/**/*.{html,js,ts,vue}"],
-  safelist: [...dynamicClasses],
+  safelist: [...dynamicClasses, ...colClasses],
   theme: {
     extend: {
       colors: {}
