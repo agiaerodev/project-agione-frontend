@@ -25,11 +25,13 @@ export default {
   validateModeAccess: true,//Define if validate app mode access
   forceRoleAndDepartment: false,//Force to select role and department
   useLocalTranslations: true,//Define from where use the translations
+  disableColumnsButton: true,
   //UI Languages
   languages: {
     default: 'es',
     availables: ['en-us', 'es']
   },
+  //disableColumnsButton: true, //Define if disables columns button in pageActions
   //Modules
   modules: moduleList.modules,
   //Cache
