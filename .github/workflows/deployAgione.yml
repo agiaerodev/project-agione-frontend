@@ -73,3 +73,12 @@ jobs:
           app_location: "dist/pwa" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "dist" # Built app content directory - optional
+      - name: ✅ Notificar a Discord
+        run: |
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "content": "✅ **Construction successfully completed!**\n📂 **Rama:** '"$BRANCH_NAME"'"
+               }' \
+               "https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX"
