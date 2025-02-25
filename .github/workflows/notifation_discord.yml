@@ -1,0 +1,44 @@
+name: Notify on Commit or PR
+
+on:
+  push:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Notification to Discord
+        env:
+          WEBHOOK_URL: https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+          BRANCH: ${{ github.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_MERGEABLE: ${{ github.event.pull_request.mergeable }}
+          PR_STATE: ${{ github.event.pull_request.state }}
+        run: |
+          if [ "$EVENT_NAME" == "push" ]; then
+            MESSAGE="{
+              \"embeds\": [{
+                \"title\": \"🚀 New Commit in $REPO\",
+                \"description\": \"**Author:** $ACTOR\\n**Branch:** $BRANCH\\n**Message:** $COMMIT_MSG\\n[View Commit]($COMMIT_URL)\",
+                \"color\": 3066993
+              }]
+            }"
+          elif [ "$EVENT_NAME" == "pull_request" ]; then
+
+            MESSAGE="{
+              \"embeds\": [{
+                \"title\": \"🔹 New Pull Request in $REPO\",
+                \"description\": \"**Author:** $ACTOR\\n**Title:** $PR_TITLE\\n**State:** $PR_STATE\\n[View PR]($PR_URL)\",
+                \"color\": 15105570
+              }]
+            }"
+          fi
+          curl -X POST -H 'Content-Type: application/json' --data "$MESSAGE" "$WEBHOOK_URL"
