@@ -73,12 +73,34 @@ jobs:
           app_location: "dist/pwa" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "dist" # Built app content directory - optional
-      - name: ✅ Notificar a Discord
+      - name: ✅ Notify Discord
+        if: success()
         run: |
           BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           curl -H "Content-Type: application/json" \
                -X POST \
                -d '{
-                 "content": "✅ **Construction successfully completed!**\n📂 **Rama:** '"$BRANCH_NAME"'"
+                 "content": "✅ **Construction successfully completed!**\n📂 **Branch:** '"$BRANCH_NAME"'"
                }' \
                "https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX"
+      - name: ❌ Error notification in Discord
+        if: failure()
+        run: |
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "content": "❌ **Build failed!**\n📂 **Branch:** '"$BRANCH_NAME"'\n⚠️ Check the logs in GitHub Actions."
+               }' \
+               "https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX"
+      - name: ⏹️ Discord cancellation notification
+        if: cancelled()
+        run: |
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "content": "⏹️ **Build canceled!**\n📂 **Branch:** '"$BRANCH_NAME"'\n⚠️ Workflow execution was stopped."
+               }' \
+               "https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX"
+
