@@ -35,6 +35,7 @@ setCacheNameDetails({
 const wbManifest = [ ...self.__WB_MANIFEST ]
 
 const modules = moduleList.modules;
+const moduleDefault = moduleList.default || [];
 
 const filterRoutes = (routes: any, modules: string[]) => {
   // filtering resources to cache
@@ -46,8 +47,10 @@ const filterRoutes = (routes: any, modules: string[]) => {
   });
 }
 
+const resources = filterRoutes(wbManifest, modules.concat(moduleDefault));
+
 // Use with precache injection
-precacheAndRoute(filterRoutes(wbManifest, modules));
+precacheAndRoute(resources);
 
 cleanupOutdatedCaches()
 
