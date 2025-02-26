@@ -19,5 +19,11 @@
         "qoffline",
         "qreports",
         "quickbase"
+    ],
+    "default": [
+        "qmedia",
+        "qcheckin",
+        "qqreable",
+        "qrequestable"
     ]
 }
