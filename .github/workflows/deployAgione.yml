@@ -54,7 +54,7 @@ jobs:
       - name: Initialize and update submodules
         run: |
           branch="staging"
-          [ "${{ github.ref }}" == "refs/heads/master" ] && branch="master"
+          [ "${{ github.ref }}" == "refs/heads/master" ] && branch="staging"
           git submodule update --init --remote
           git submodule foreach --recursive git fetch
           git submodule foreach --recursive git checkout $branch
