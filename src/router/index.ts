@@ -40,7 +40,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
 
   Router.onError((error) => {
     console.log(error)
-    if (/Loading chunk (\d)+ failed/.test(error.message)) {
+    if (/chunk/.test(error.message)) {
       console.warn("Error chunk", error);
       window.location.reload();
     }
