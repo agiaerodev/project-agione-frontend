@@ -38,6 +38,13 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     ),
   });
 
+  Router.onError((error) => {
+    if (/Loading chunk (\d)+ failed/.test(error.message)) {
+      console.warn("Error chunk");
+      window.location.reload();
+    }
+  });
+
   pluginRouter.setRouter(Router)
 
   return Router;
