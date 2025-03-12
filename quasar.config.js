@@ -66,6 +66,7 @@ module.exports = configure(function(ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
+      extractCSS: false,
       vueLoaderOptions: {
         // Options for vue-template-compiler
         compilerOptions: {
@@ -233,7 +234,7 @@ module.exports = configure(function(ctx) {
       workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
         maximumFileSizeToCacheInBytes: 1024 * 1024 * 10, // 10MB
-        exclude: [/node_modules/, /manifest\.json/],
+        exclude: [/node_modules/, /manifest\.json/, /src_pages_updateApp_vue\.js/, /src_pages_404_vue\.js/],
       }, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
