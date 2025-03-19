@@ -3,6 +3,7 @@
     <!--Page Actions-->
     <div class="q-mb-md">
       <page-actions 
+        v-if="showDynamicFilters && dashboardPermissions"
         :title="$tr($route.meta.title)" 
         :tour-name="tourName"
         :excludeActions="excludeActions" 
@@ -10,19 +11,10 @@
         :dynamicFilter="filtersModel"
         :dynamicFilterValues="getDynamicFilterValues"
         :dynamicFilterSummary="dynamicFilterSummary"
+        @updateDynamicFilterValues="filters => updateDynamicFilterValues(filters)"
         :help="helpText"
       />
     </div>
-    <dynamicFilter
-      v-if="showDynamicFilters && dashboardPermissions"
-      :systemName="systemName"
-      :modelValue="showDynamicFilterModal"
-      :filters="filtersModel"
-      @showModal="showDynamicFilterModal = true"
-      @hideModal="showDynamicFilterModal = false"
-      @update:modelValue="filters => updateDynamicFilterValues(filters)"
-      @update:summary="summary => dynamicFilterSummary = summary"
-    />
 
     <dashboardRenderer
       v-if="showDashboard && dashboardPermissions"
