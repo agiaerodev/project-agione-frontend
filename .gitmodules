@@ -64,3 +64,6 @@
 [submodule "src/modules/qramp"]
 	path = src/modules/qramp
 	url = https://github.com/agiaerodev/qramp.git
+[submodule "src/modules/qreports"]
+	path = src/modules/qreports
+	url = https://github.com/agiaerodev/qreports.git
