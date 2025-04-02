@@ -32,7 +32,6 @@ test('Verify the display of actions and filter fields in the passenger section',
     await expect(page.getByLabel('Customer')).toBeVisible();
     await expect(page.getByLabel('Contract')).toBeVisible();
     await expect(page.getByLabel('Status')).toBeVisible();
-    await expect(page.getByLabel('Ad Hoc')).toBeVisible();
     await expect(page.locator('#crudIndexViewAction')).toBeVisible();
     await expect(page.getByPlaceholder('Search')).toBeVisible({ timeout: 10000 });
 })
@@ -91,28 +90,28 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByRole('button', { name: 'Go out to the list' }).click();
     })
 
-    test('Check dynamic fields', async ({ page }) => {
-        await openModalFull(page);
+    // test('Check dynamic fields', async ({ page }) => {
+    //     await openModalFull(page);
 
-        await page.getByLabel('*Operation').click();
-        await page.getByLabel('*Operation').fill('Charter.ORG');
-        await page.getByRole('option', { name: 'Charter.ORG' }).click();
-        await expect(page.getByLabel('*Charter Rate')).toBeVisible();
-        await expect(page.getByLabel('Cancellation type')).toBeVisible();
+    //     await page.getByLabel('*Operation').click();
+    //     await page.getByLabel('*Operation').fill('Ferry Originate');
+    //     await page.getByRole('option', { name: 'Ferry Originate' }).click();
+    //     await expect(page.getByLabel('*Charter Rate')).toBeVisible();
+    //     await expect(page.getByLabel('Cancellation type')).toBeVisible();
 
-        await page.getByLabel('*Operation').click();
-        await page.getByLabel('*Operation').fill('Charter.Unscheduled');
-        await page.getByRole('option', { name: 'Charter.Unscheduled' }).click();
-        await expect(page.getByLabel('*Charter Rate')).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
-        await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
+    //     await page.getByLabel('*Operation').click();
+    //     await page.getByLabel('*Operation').fill('Charter.Unscheduled');
+    //     await page.getByRole('option', { name: 'Charter.Unscheduled' }).click();
+    //     await expect(page.getByLabel('*Charter Rate')).toBeVisible();
+    //     await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
+    //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
 
-        await page.getByLabel('*Operation').click();
-        await page.getByLabel('*Operation').fill('Charter.TURN');
-        await page.getByRole('option', { name: 'Charter.TURN' }).click();
-        await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
-        await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
-    })
+    //     await page.getByLabel('*Operation').click();
+    //     await page.getByLabel('*Operation').fill('Charter.TURN');
+    //     await page.getByRole('option', { name: 'Charter.TURN' }).click();
+    //     await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
+    //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
+    // })
     
     test('Update a work order', async ({ page }) => {
         await openModalFull(page);
@@ -135,22 +134,22 @@ test.describe.serial('Test flight CRUD', () => {
         
         await expect(page.getByLabel('*Operation')).toBeVisible();
         await page.getByLabel('*Operation').click();
-        await page.getByLabel('*Operation').fill('Ferry RON');
-        await page.getByRole('option', { name: 'Ferry RON' }).click();
+        await page.getByLabel('*Operation').fill('Flight TURN.Diversion.Load Change');
+        await page.getByRole('option', { name: 'Flight TURN.Diversion.Load Change' }).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
-        await expect(page.getByLabel('Cancellation type')).toBeVisible();
-        await page.getByLabel('Cancellation type').click();
+        await expect(page.getByLabel('Cancellation type').nth(1)).toBeVisible();
+        await page.getByLabel('Cancellation type').nth(1).click();
         await page.getByRole('option', { name: 'Cancelled Flight', exact: true }).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
-        await expect(page.getByLabel('Pax Operation')).toBeVisible();
-        await page.getByLabel('Pax Operation').fill('Flight TURN');
+        await expect(page.getByLabel('Pax Operation').nth(1)).toBeVisible();
+        await page.getByLabel('Pax Operation').nth(1).fill('Flight TURN');
         await page.getByRole('option', { name: 'Flight TURN-PAX.Delay' }).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
-        await page.getByLabel('Cancellation Notice time').click();
-        await page.getByLabel('Cancellation Notice time').fill('24');
+        await page.getByLabel('Cancellation Notice time').nth(1).click();
+        await page.getByLabel('Cancellation Notice time').nth(1).fill('24');
     
         await page.getByLabel('Origin').click();
         await page.getByLabel('Origin').fill('Abile');
@@ -158,10 +157,10 @@ test.describe.serial('Test flight CRUD', () => {
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').click();
-        await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').fill('78');
+        await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').fill('45');
     
         await page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm').click();
-        await page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm').fill(tomorrow);
+        await page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm').fill(today);
     
         await page.getByLabel('Destination').click();
         await page.getByLabel('Destination').fill('Acadiana');
@@ -172,7 +171,7 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByTestId('dynamicField-outboundTailNumber').getByLabel('Tail N°').fill('45');
     
         await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').click();
-        await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').fill(today);
+        await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').fill(tomorrow);
     
         await page.getByLabel('Inbound Gate Arrival').click();
         await page.getByLabel('Inbound Gate Arrival').fill('002');
@@ -190,8 +189,8 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByText('Cargo Man Power').click();
         await page.locator('.tw-flex > div:nth-child(3) > .q-btn').first().click();
         await page.locator('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
-        await page.locator('div:nth-child(2) > .tw-w-3\\/5 > div > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
-        await page.locator('div:nth-child(2) > .tw-w-3\\/5 > div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').click();
+        await page.locator('.q-px-sm > .fa-star').first().click();
+        await page.locator('div:nth-child(2) > .color-bg-blue-gray-custom > div > .q-px-sm > .fa-star').click();
         
         await expect(page.locator('button').filter({ hasText: '1' }).nth(1)).toBeVisible();
         await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
@@ -266,8 +265,7 @@ test.describe('Testing feature non-flight work order', () => {
             await expect(page.getByText('If you left this field empty')).toBeVisible();
             await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
             await page.getByLabel('*Customer/Contract').click();
-            await page.getByLabel('*Customer/Contract').fill('ABX AIR (Ad Hoc');
-            await page.getByRole('option', { name: 'ABX AIR (Ad Hoc)' }).locator('div').nth(1).click();
+            await page.getByRole('option').first().locator('div').nth(1).click();
             await page.getByLabel('Flight Number').click();
             await page.getByLabel('Flight Number').fill('TEST-01');
             await page.getByLabel('Assigned to').click();

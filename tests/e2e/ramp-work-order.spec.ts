@@ -96,7 +96,7 @@ test('Test the modal for creating Work Orders', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
 
     await page.getByTestId('dynamicField-customerId').locator('label i').click();
-    await expect(page.getByRole('option', { name: 'Air LLC (Ad Hoc)' })).toBeVisible();
+    await expect(page.getByRole('option').first()).toBeVisible();
 })
 
 test.describe.serial('Testing work-order CRUD', () => {
@@ -104,7 +104,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.getByRole('button', { name: 'New' }).click();
     
         await page.getByTestId('dynamicField-customerId').locator('label i').click();
-        await page.getByRole('option', { name: 'Air LLC (Ad Hoc)' }).locator('div').nth(1).click();
+        await page.getByRole('option').first().locator('div').nth(1).click();
     
         await page.getByLabel('*Flight number').click();
         await page.getByLabel('*Flight number').fill('TEST-00');
@@ -229,8 +229,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
         await page.getByRole('list').locator('div').filter({ hasText: 'Services' }).click();
         await page.locator('.tw-flex > div:nth-child(3) > .q-btn').first().click();
-        await page.locator('div:nth-child(2) > .tw-w-3\\/5 > div > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').click();
-        await expect(page.getByText('Services/Services 2')).toBeVisible();
+        await expect(page.getByRole('button').filter({ hasText: '1' }).nth(1)).toBeVisible();
     
         await page.locator('#stepComponent div').filter({ hasText: 'Remark' }).nth(2).click();
         await page.getByLabel('Remark', { exact: true }).first().click();

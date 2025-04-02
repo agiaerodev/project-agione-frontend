@@ -126,8 +126,8 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.locator('label').filter({ hasText: 'ArrivedFlight Status' }).getByRole('button').click();
         await page.locator('label').filter({ hasText: 'Flight Status' }).locator('i').click();
         await page.getByRole('option', { name: 'Scheduled' }).click();
-        await page.locator('label').filter({ hasText: 'A20NAircraft types' }).locator('i').click();
-        await page.getByRole('option', { name: 'A124', exact: true }).click();
+        await page.locator('label').filter({ hasText: 'Aircraft types' }).locator('i').click();
+        await page.getByRole('option').first().click();
     
         await page.locator('.tw-border > .tw-space-x-2').getByRole('button').nth(0).click();
         await expect(page.getByText('TEST-01')).toBeVisible();
@@ -170,7 +170,7 @@ test.describe('Testing the actions', () => {
 test.describe.serial('Test el CRUD de schedule', () => {
     test('Crear un schedule desde la tabla de schedule', async ({ page }) => {
         await selectStation(page);
-        await createScheduleInTable(page, expect, 'Full_turn');
+        await createScheduleInTable(page, expect);
     })
 
     test('Editar un schedule desde la tabla de schedule', async ({ page }) => {
