@@ -15,8 +15,7 @@ test('Operation Types', async ({ page }) => {
     await page.getByLabel('Operation name').click();
     await page.getByLabel('Operation name').fill('test operation');
     await page.getByLabel('Company Name').click();
-    await page.getByLabel('Company Name AGI Secure - CA').fill('AGI secure');
-    await page.locator('.vue-treeselect__option').first().click();
+    await page.getByRole('option').first().click();
 
     await page.getByRole('button', { name: 'null' }).click();
     await page.getByTestId('dynamicField-options').getByLabel('').press('Enter');
