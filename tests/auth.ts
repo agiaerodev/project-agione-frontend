@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import env from 'src/environments/environment'
+import { config } from './config'
 
 const authFile = 'playwright/.auth/user.json';
 const API = `${env.baseUrl}/api/profile/v1/auth/login`;
@@ -51,10 +52,8 @@ const fetchLogin = async () => {
     return data.data
 }
 
-const insertUser = async ({ sessionData }) => {
-    const DB_NAME = 'localhost:8080DB';
-
-    const openRequest = window.indexedDB.open(DB_NAME);
+const insertUser = async ({ sessionData, nameLocalStorage }) => {
+    const openRequest = window.indexedDB.open(nameLocalStorage);
 
     openRequest.onupgradeneeded = function() {
         const db = openRequest.result;
@@ -83,9 +82,40 @@ const insertUser = async ({ sessionData }) => {
     };
 }
 
+function getLocalStorageName(url) {
+    try {
+        const parsedUrl = new URL(url);
+        const host = parsedUrl.hostname;
+        const port = parsedUrl.port;
+  
+        if (host === 'localhost') {
+            return `localhost${port ? `:${port}` : ''}DB`
+        }
+  
+        const parts = host.split('.');
+        if (parts.length < 2) return `${host}DB`
+
+        const firstPart = parts[0]
+        const middleParts = parts.slice(1, -1)
+
+        const pascalPart = middleParts.map(part =>
+        part
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase())
+            .replace(/\s/g, '')
+        ).join('');
+
+        return `${firstPart}${pascalPart}DB`;
+    } catch (error) {
+        console.error('Invalid URL:', error);
+        return null;
+    }
+}
+
 export const createSession = async (page) => {
     const sessionData = await fetchLogin()
-    await page.evaluate(insertUser, { sessionData })
+    const nameLocalStorage = getLocalStorageName(config.url)
+    await page.evaluate(insertUser, { sessionData, nameLocalStorage })
     await createAuthFolder()
     await storeCredentials({ sessionData })
 }
