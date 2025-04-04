@@ -1,14 +1,15 @@
 import { test, expect } from '../shared-context'
 import { deleteWorkOrder } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/fueling/index'
+const PATH = '/ramp/fueling/index'
+
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const openModal = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
-
-test.use({ baseURL: URL });
 
 test('Passenger Fueling', async ({ page }) => {
     await expect(page.getByText('Fueling New')).toBeVisible({ timeout: 15000 });
@@ -55,7 +56,6 @@ test.describe.serial('CRUD', () => {
         await page.getByLabel('Responsible').fill('ima');
         await page.getByRole('option', { name: 'Imagina Colombia' }).click();
         await page.getByLabel('*Station').click();
-        // await page.getByLabel('*Station').fill('new jerse');
         await page.getByRole('option').first().click();
         await page.getByRole('button', { name: 'Save' }).click();
         

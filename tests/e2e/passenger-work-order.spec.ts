@@ -1,8 +1,11 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone';
 import { deleteWorkOrder } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/passenger/work-orders/index'
+const PATH = '/passenger/work-orders/index'
+
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const openModalFull = async (page) => {
     await page.locator('.crudIndexActionsColumn').first().click();
@@ -19,8 +22,6 @@ const deleteWO = async (page) => {
     
     await expect(page.locator('table').getByText(id)).toBeHidden({ timeout: 60000 });
 };
-
-test.use({ baseURL: URL });
 
 test('Verify the display of actions and filter fields in the passenger section', async ({ page }) => {
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });

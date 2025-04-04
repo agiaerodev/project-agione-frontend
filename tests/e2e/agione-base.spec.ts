@@ -1,13 +1,12 @@
 import { test, expect } from '../shared-context'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/'
+test.use({ baseURL: config.url });
 
 const validateWithoutErrorMessage = async (page) => {
     await expect(page.locator('#innerLoadingMaster div')).toBeVisible();
     await expect(page.getByText('Error requesting data')).not.toBeVisible();
 }
-
-test.use({ baseURL: URL });
 
 const menuItems = [
     {

@@ -1,14 +1,15 @@
 import { test, expect } from '../shared-context'
 import { deleteWorkOrder } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/operation-types/index'
+const PATH = '/ramp/operation-types/index'
+
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const openModal = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
-
-test.use({ baseURL: URL });
 
 test('Operation Types', async ({ page }) => {
     await page.getByRole('button', { name: 'New' }).click();

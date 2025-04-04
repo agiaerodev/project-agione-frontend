@@ -12,8 +12,10 @@ import {
     checkTheExportActionInTheSchedule,
     checkActionsInTheScheduleTable,
 } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/schedule/index'
+const PATH = '/ramp/schedule/index'
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const selectStation = async (page) => {
     await page.getByLabel('Station').click();
@@ -27,8 +29,6 @@ const openModal = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
-
-test.use({ baseURL: URL });
 
 test('Test the schedule modal for selecting the station', async ({ page }) => {
     await expect(page.locator('#masterModalContent')).toBeVisible({ timeout: 20000 });

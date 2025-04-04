@@ -1,8 +1,9 @@
 import { test, expect } from '../shared-context'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/labor/index'
+const PATH = '/ramp/labor/index'
 
-test.use({ baseURL: URL });
+test.use({ baseURL: `${config.url}${PATH}` });
 
 test.describe.serial('CRUD', () => {
     test('Create a record in labor', async ({ page }) => {

@@ -1,15 +1,15 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone'
 import { deleteWorkOrder } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/work-orders/index'
+const PATH = '/ramp/work-orders/index'
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const openModalFull = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
-
-test.use({ baseURL: URL });
 
 test('Verify the opening and closing of the full modal', async ({ page }) => {
     await openModalFull(page)
@@ -271,14 +271,14 @@ test.describe.serial('Testing work-order CRUD', () => {
 
         await goServices(page)
         await page.getByRole('list').getByText('Services').click();
-        await page.locator('.fa-star').first().click();
+        await page.locator('.fa-star').nth(2).click();
         await expect(page.getByText('Favorite created successfully')).toBeVisible();
-        await expect(page.locator('#stepComponent button').filter({ hasText: '1' })).toBeVisible();
+        await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
 
         const fieldsTest = [
             {
                 label: '*Customer',
-                value: 'Air LLC (Ad Hoc)',
+                value: '21 Air LLC',
                 fake: 'Cargo Inc. - Hierarchy (Ad Hoc)'
             },
             {
@@ -303,7 +303,7 @@ test.describe.serial('Testing work-order CRUD', () => {
             await expect(page.getByText('Services/Services 2')).toBeVisible();
 
             await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].value)
-            await expect(page.locator('#stepComponent button').filter({ hasText: '1' })).toBeVisible();
+            await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
         }
     })
     
