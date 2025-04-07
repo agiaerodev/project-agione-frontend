@@ -42,8 +42,8 @@ const fetchLogin = async () => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "username": "",
-            "password": "",
+            "username": config.credentials.email,
+            "password": config.credentials.password,
             "device": "Windows 10.0"
         })
     })
@@ -124,7 +124,8 @@ export const acquireAccount = async (page) => {
     try {
         const fileContent = await fs.readFile(filePath, 'utf8');
         const sessionData = await JSON.parse(fileContent)
-        await page.evaluate(insertUser, { sessionData })
+        const nameLocalStorage = getLocalStorageName(config.url)
+        await page.evaluate(insertUser, { sessionData, nameLocalStorage })
     } catch (err) {
         console.error('Error reading or parsing JSON file:', err);
     }
