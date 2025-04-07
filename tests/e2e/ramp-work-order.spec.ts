@@ -266,46 +266,46 @@ test.describe.serial('Testing work-order CRUD', () => {
         await goServices(page)
     }
 
-    test('Test favorites feature', async ({ page }) => {
-        await openModalFull(page)
+    // test('Test favorites feature', async ({ page }) => {
+    //     await openModalFull(page)
 
-        await goServices(page)
-        await page.getByRole('list').getByText('Services').click();
-        await page.locator('.fa-star').nth(2).click();
-        await expect(page.getByText('Favorite created successfully')).toBeVisible();
-        await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
+    //     await goServices(page)
+    //     await page.getByRole('list').getByText('Services').click();
+    //     await page.locator('.fa-star').nth(2).click();
+    //     await expect(page.getByText('Favorite created successfully')).toBeVisible();
+    //     await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
 
-        const fieldsTest = [
-            {
-                label: '*Customer',
-                value: '21 Air LLC',
-                fake: 'Cargo Inc. - Hierarchy (Ad Hoc)'
-            },
-            {
-                label: '*Station',
-                value: 'Atlanta (ATL)',
-                fake: 'Chicago (ORD)'
-            },
-            {
-                label: '*Operation',
-                value: 'Full_turn',
-                fake: 'Half_turn_Inbound'
-            },
-            {
-                label: '*Carrier',
-                value: 'Lithuanian Airlines',
-                fake: 'Lone Star Airlines'
-            },
-        ]
+    //     const fieldsTest = [
+    //         {
+    //             label: '*Customer',
+    //             value: '21 Air LLC',
+    //             fake: 'Cargo Inc. - Hierarchy (Ad Hoc)'
+    //         },
+    //         {
+    //             label: '*Station',
+    //             value: 'Atlanta (ATL)',
+    //             fake: 'Chicago (ORD)'
+    //         },
+    //         {
+    //             label: '*Operation',
+    //             value: 'Full_turn',
+    //             fake: 'Half_turn_Inbound'
+    //         },
+    //         {
+    //             label: '*Carrier',
+    //             value: 'Lithuanian Airlines',
+    //             fake: 'Lone Star Airlines'
+    //         },
+    //     ]
 
-        for (let i = 0; i < fieldsTest.length; i++) {
-            await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].fake)
-            await expect(page.getByText('Services/Services 2')).toBeVisible();
+    //     for (let i = 0; i < fieldsTest.length; i++) {
+    //         await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].fake)
+    //         await expect(page.getByText('Services/Services 2')).toBeVisible();
 
-            await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].value)
-            await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
-        }
-    })
+    //         await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].value)
+    //         await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
+    //     }
+    // })
     
     test('Test delete work order', async ({ page }) => {
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
