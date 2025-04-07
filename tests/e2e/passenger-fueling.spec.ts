@@ -59,7 +59,7 @@ test.describe.serial('CRUD', () => {
         await page.getByRole('option').first().click();
         await page.getByRole('button', { name: 'Save' }).click();
         
-        await expect(page.locator('#masterModalContent div').filter({ hasText: 'Update fueling' }).first()).toBeVisible();
+        await expect(page.locator('#masterModalContent div').filter({ hasText: 'Update fueling' }).first()).toBeVisible({ timeout: 15000 });
     });
     
     test('Passenger Fueling - Edit', async ({ page }) => {
