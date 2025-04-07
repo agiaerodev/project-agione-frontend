@@ -99,9 +99,9 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByText('Full_turn').click();
     
         await page.getByPlaceholder('HH:mm', { exact: true }).click();
-        await page.getByPlaceholder('HH:mm', { exact: true }).fill('14:05');
+        await page.getByPlaceholder('HH:mm', { exact: true }).fill(moment().format('HH:mm'));
         await page.getByPlaceholder('MM/DD/YYYY HH:mm').click();
-        await page.getByPlaceholder('MM/DD/YYYY HH:mm').fill(moment().format('MM/DD/YYYY HH:mm'));
+        await page.getByPlaceholder('MM/DD/YYYY HH:mm').fill(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
         await page.getByLabel('Flight Status').click();
         await page.getByRole('option', { name: 'Arrived' }).click();
         await page.getByLabel('Aircraft types').click();
