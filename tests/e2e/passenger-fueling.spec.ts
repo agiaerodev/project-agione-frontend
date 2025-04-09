@@ -43,6 +43,9 @@ test('Passenger Fueling', async ({ page }) => {
 
 test.describe.serial('CRUD', () => {
     test('Passenger Fueling - New', async ({ page }) => {
+        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
+
         await page.getByRole('button', { name: 'New' }).click();
         await page.getByLabel('*Customer/Contract').click();
         await page.getByRole('option').first().click();
@@ -60,29 +63,47 @@ test.describe.serial('CRUD', () => {
     });
     
     test('Passenger Fueling - Edit', async ({ page }) => {
+        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
+        
         await openModal(page);
+
+        await page.waitForLoadState('networkidle')
     
         await page.getByLabel('*Customer/Contract').click();
         await page.getByLabel('*Customer/Contract').fill('AA corporation');
         await page.getByRole('option', { name: 'AA Corporation (Ad Hoc)' }).click();
+
         await page.locator('#masterModalContent div').filter({ hasText: 'Update fueling Id:' }).first().click();
+
         await page.getByLabel('*A/C Type').click();
         await page.getByRole('option').first().click();
+
         await page.getByLabel('*Carrier').click();
-        await page.getByRole('option').first().click();
+        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
+        await page.waitForLoadState('load')
+        await page.waitForTimeout(1000)
+        await page.getByRole('option').nth(2).click();
+
         await page.locator('#masterModalContent div').filter({ hasText: 'Update fueling Id:' }).first().click();
+        
         await page.getByLabel('Aircraft Registration').click();
         await page.getByLabel('Aircraft Registration').fill('545218');
+        
         await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
         await page.getByRole('list').getByText('Services').click();
         await page.locator('.tw-flex > div:nth-child(3) > .q-btn').first().click();
         await page.locator('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
         await expect(page.locator('section').locator('button').nth(1)).toBeVisible();
         await page.locator('#stepComponent div').filter({ hasText: 'Remark' }).nth(2).click();
+
         await page.getByLabel('Remark').click();
         await page.getByLabel('Remark').fill('Message test');
+
         await page.getByLabel('Safety Message').click();
         await page.getByLabel('Safety Message').fill('Message test');
+        
         await page.getByRole('button', { name: 'Close Flight' }).click();
         await page.locator('#masterModalContent div').filter({ hasText: 'Update fueling Id:' }).first().waitFor({ state: 'hidden' });
         await expect(page.getByText('Record updated')).toBeVisible();

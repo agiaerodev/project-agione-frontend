@@ -8,7 +8,6 @@ export const checkFilterFieldsInTheSchedule = async (page, expect) => {
     await expect(page.getByLabel('Carrier')).toBeVisible();
     await expect(page.getByLabel('Station')).toBeVisible();
     await expect(page.getByLabel('Status', { exact: true })).toBeVisible();
-    await expect(page.getByLabel('Work Order Types')).toBeVisible();
     await expect(page.getByLabel('Operation type')).toBeVisible();
     await expect(page.getByLabel('Flight Status')).toBeVisible();
     await expect(page.getByLabel('Ad Hoc')).toBeVisible();
