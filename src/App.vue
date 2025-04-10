@@ -17,13 +17,6 @@ export default defineComponent({
     {
       this.$router.push({ name: 'app.update.app' });
     });
-    window.onerror = function (message, source, lineno, colno, error) {
-      if (/Loading chunk/.test(error)) {
-        console.warn("Error chunk", error);
-        window.location.reload();
-      }
-      console.warn("Error en este componente:", message, error);
-    };
   }
 });
 </script>
