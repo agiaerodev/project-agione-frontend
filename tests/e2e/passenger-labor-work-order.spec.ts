@@ -40,6 +40,8 @@ test.describe.serial('CRUD', () => {
         await expect(page.getByRole('button', { name: 'Yes' })).toBeVisible();
     
         await page.getByRole('button', { name: 'Yes' }).click();
+
+        await page.waitForLoadState('networkidle');
     
         await expect(page.getByText('What do you want to do?')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Go out to the list' })).toBeVisible();
