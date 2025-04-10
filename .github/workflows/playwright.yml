@@ -1,9 +1,7 @@
-name: playwright-tests
+name: Playwright Tests
 
 on:
-  push:
-    branches:
-      - stg
+  workflow_call:
 
 jobs:
   test:
@@ -25,7 +23,7 @@ jobs:
           echo "const email = '${{ secrets.AGIONE_FRONTEND_TEST_USER_EMAIL }}';" > env.js
           echo "const password = '${{ secrets.AGIONE_FRONTEND_TEST_USER_PASSWORD }}';" >> env.js
           echo "module.exports = { email, password };" >> env.js
-          
+
       - name: Cache Playwright Browsers
         uses: actions/cache@v3
         with:
