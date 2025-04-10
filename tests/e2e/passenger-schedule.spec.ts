@@ -11,8 +11,11 @@ import {
     checkFilterFieldsInTheSchedule,
     checkActionsInTheScheduleTable,
 } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/passenger/schedule/index'
+const PATH = '/passenger/schedule/index'
+
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const selectStation = async (page) => {
     await page.getByLabel('Station').click();
@@ -26,8 +29,6 @@ const openModal = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
-
-test.use({ baseURL: URL });
 
 test('Test the schedule modal for selecting the station', async ({ page }) => {
     await expect(page.locator('#masterModalContent')).toBeVisible({ timeout: 20000 });
@@ -47,7 +48,7 @@ test('Test that the modal requesting the station triggers correctly', async ({ p
     await page.getByRole('button', { name: 'Scheduler' }).click();
     await page.getByRole('button', { name: 'Back to schedule' }).click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
-    
+
     await page.getByLabel('Collapse "Passenger"').click();
     await page.getByLabel('Expand "Passenger"').click();
     await page.locator('#menuItem-qrampadminpassenger').click();
@@ -57,7 +58,7 @@ test('Test that the modal requesting the station triggers correctly', async ({ p
     await page.locator('#menuItem-qrampadminoperationTypesPassenger').click();
     await page.locator('#menuItem-qrampadminpassengerSchedule').click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
-    
+
     await page.getByLabel('Expand "Ramp"').click();
     await page.locator('#menuItem-qrampadminschedule').click();
     await page.getByLabel('Station').click();
@@ -95,7 +96,7 @@ test.describe.serial('Testing the schedule CRUD', () => {
 
         await page.getByLabel('*Operation').fill('Ferry Originate');
         await page.getByRole('option', { name: 'Ferry Originate' }).click();
-        
+
         await page.getByPlaceholder('HH:mm', { exact: true }).click();
         await page.getByPlaceholder('HH:mm', { exact: true }).fill(moment().format('HH:mm'));
         await page.getByPlaceholder('MM/DD/YYYY HH:mm').fill(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
@@ -103,11 +104,11 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByRole('option', { name: 'Departed' }).click();
         await page.getByLabel('Aircraft types').click();
         await page.getByRole('option').first().click();
-    
+
         await page.locator('.tw-border > .tw-space-x-2').getByRole('button').nth(0).click();
         await expect(page.getByText('TEST-00/TEST-00')).toBeVisible({ timeout: 20000 });
     })
-    
+
     test('Edit schedule', async ({ page }) => {
         await selectStation(page);
         const actuaIn = moment().format('MM/DD/YYYY HH:mm');
@@ -131,7 +132,7 @@ test.describe.serial('Testing the schedule CRUD', () => {
 
         await page.getByTestId('dynamicField-outboundFlightNumber').getByLabel('*Flight number').click();
         await page.getByTestId('dynamicField-outboundFlightNumber').getByLabel('*Flight number').fill('TEST-01');
-        
+
         await page.getByLabel('Origin').click();
         await page.getByLabel('Origin').fill('acadiana');
         await page.getByRole('option', { name: 'Acadiana Rgnl (ARA)' }).click();
@@ -184,7 +185,7 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.locator('#stepComponent div').filter({ hasText: 'Delay' }).nth(2).click();
         await page.locator('div').filter({ hasText: /^Our delay$/ }).first().click();
         await page.getByRole('option', { name: 'No' }).click();
-        
+
         await page.getByLabel('Delay Comment').click();
         await page.getByLabel('Delay Comment').fill('4');
 
@@ -203,10 +204,11 @@ test.describe.serial('Testing the schedule CRUD', () => {
 
         await page.getByRole('button', { name: 'Close' }).click();
         await page.locator('#innerLoadingMaster div').waitFor({ state: 'hidden' });
+        await page.waitForLoadState('networkidle')
         await expect(page.getByText('Record updated')).toBeVisible({ timeout: 10000 });
-        await expect(page.getByText('TEST-01')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByText('TEST-01').first()).toBeVisible({ timeout: 10000 });
     })
-    
+
     test('Delete schedule', async ({ page }) => {
         await selectStation(page);
         await page.getByTestId('kanbanDay').locator('div').filter({ hasText: 'TEST-01/TEST-01' }).locator('#kanban-card-actions').nth(2).click();
@@ -223,7 +225,6 @@ test.describe('Testing the actions', () => {
     
     // test('Testing the "Copy Tiny URL" action', async ({ page }) => {
     //     await selectStation(page);
-        
     //     await page.waitForSelector('svg', { state: 'hidden' })
     //     await expect(page.locator('.actions-content > div > .q-btn').first()).toBeVisible();
     //     await page.locator('.actions-content > div > .q-btn').first().click();
@@ -237,20 +238,20 @@ test.describe('Testing the actions', () => {
 })
 
 test.describe.serial('Test el CRUD de schedule', () => {
-    test('Crear un schedule desde la tabla de schedule', async ({ page }) => {
+    test('Create a schedule', async ({ page }) => {
         await selectStation(page);
         await createScheduleInTable(page, expect);
     })
 
-    test('Editar un schedule desde la tabla de schedule', async ({ page }) => {
+    test('Edit a schedule', async ({ page }) => {
         await selectStation(page);
-        
+
         await page.getByRole('button', { name: 'Scheduler' }).click();
         await openModal(page);
         await editScheduleInTable(page, expect);
     })
 
-    test('Delete a schedule from the schedule table', async ({ page }) => {
+    test('Delete a schedule', async ({ page }) => {
         await selectStation(page);
         await page.getByRole('button', { name: 'Scheduler' }).click();
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();

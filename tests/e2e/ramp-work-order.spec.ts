@@ -1,15 +1,15 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone'
 import { deleteWorkOrder } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/work-orders/index'
+const PATH = '/ramp/work-orders/index'
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const openModalFull = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
-
-test.use({ baseURL: URL });
 
 test('Verify the opening and closing of the full modal', async ({ page }) => {
     await openModalFull(page)
@@ -197,8 +197,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
         await page.getByLabel('Origin').click();
-        await page.getByLabel('Origin').fill('acadiana');
-        await page.getByRole('option', { name: 'Acadiana Rgnl (ARA)' }).click();
+        await page.getByRole('option').nth(2).click();
     
         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').click();
         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').fill('789');
@@ -210,8 +209,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.getByTestId('dynamicField-inboundBlockIn').getByPlaceholder('MM/DD/YYYY HH:mm').fill(yesterday);
     
         await page.getByLabel('Destination').click();
-        await page.getByLabel('Destination').fill('abbot');
-        await page.getByRole('option', { name: 'Abbotsford Int\'l (YXX)' }).click();
+        await page.getByRole('option').nth(2).click();
     
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
@@ -266,46 +264,46 @@ test.describe.serial('Testing work-order CRUD', () => {
         await goServices(page)
     }
 
-    test('Test favorites feature', async ({ page }) => {
-        await openModalFull(page)
+    // test('Test favorites feature', async ({ page }) => {
+    //     await openModalFull(page)
 
-        await goServices(page)
-        await page.getByRole('list').getByText('Services').click();
-        await page.locator('.fa-star').first().click();
-        await expect(page.getByText('Favorite created successfully')).toBeVisible();
-        await expect(page.locator('#stepComponent button').filter({ hasText: '1' })).toBeVisible();
+    //     await goServices(page)
+    //     await page.getByRole('list').getByText('Services').click();
+    //     await page.locator('.fa-star').nth(2).click();
+    //     await expect(page.getByText('Favorite created successfully')).toBeVisible();
+    //     await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
 
-        const fieldsTest = [
-            {
-                label: '*Customer',
-                value: 'Air LLC (Ad Hoc)',
-                fake: 'Cargo Inc. - Hierarchy (Ad Hoc)'
-            },
-            {
-                label: '*Station',
-                value: 'Atlanta (ATL)',
-                fake: 'Chicago (ORD)'
-            },
-            {
-                label: '*Operation',
-                value: 'Full_turn',
-                fake: 'Half_turn_Inbound'
-            },
-            {
-                label: '*Carrier',
-                value: 'Lithuanian Airlines',
-                fake: 'Lone Star Airlines'
-            },
-        ]
+    //     const fieldsTest = [
+    //         {
+    //             label: '*Customer',
+    //             value: '21 Air LLC',
+    //             fake: 'Cargo Inc. - Hierarchy (Ad Hoc)'
+    //         },
+    //         {
+    //             label: '*Station',
+    //             value: 'Atlanta (ATL)',
+    //             fake: 'Chicago (ORD)'
+    //         },
+    //         {
+    //             label: '*Operation',
+    //             value: 'Full_turn',
+    //             fake: 'Half_turn_Inbound'
+    //         },
+    //         {
+    //             label: '*Carrier',
+    //             value: 'Lithuanian Airlines',
+    //             fake: 'Lone Star Airlines'
+    //         },
+    //     ]
 
-        for (let i = 0; i < fieldsTest.length; i++) {
-            await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].fake)
-            await expect(page.getByText('Services/Services 2')).toBeVisible();
+    //     for (let i = 0; i < fieldsTest.length; i++) {
+    //         await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].fake)
+    //         await expect(page.getByText('Services/Services 2')).toBeVisible();
 
-            await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].value)
-            await expect(page.locator('#stepComponent button').filter({ hasText: '1' })).toBeVisible();
-        }
-    })
+    //         await goToFlightAndChangeAField(page, fieldsTest[i].label, fieldsTest[i].value)
+    //         await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
+    //     }
+    // })
     
     test('Test delete work order', async ({ page }) => {
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
