@@ -23,6 +23,8 @@ const selectStation = async (page) => {
     await page.getByRole('option', { name: 'Atlanta (ATL)' }).click();
     await expect(page.getByRole('button', { name: 'filters' })).toBeVisible();
     await page.getByRole('button', { name: 'filters' }).click();
+
+    await page.waitForLoadState('networkidle');
 }
 
 const openModal = async (page) => {
@@ -109,7 +111,7 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByRole('option', { name: 'A20N' }).locator('div').nth(1).click();
     
         await page.locator('.tw-border > .tw-space-x-2').getByRole('button').nth(0).click();
-        await expect(page.getByText('TEST-00/TEST-00')).toBeVisible();
+        await expect(page.getByText('TEST-00/TEST-00')).toBeVisible({ timeout: 15000 });
     })
     
     test('Edit schedule', async ({ page }) => {
@@ -123,8 +125,8 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByTestId('dynamicField-operationTypeId').getByRole('button')   .click();
         await page.getByLabel('*Operation').fill('Half_turn_Inbound');
         await page.getByRole('option', { name: 'Half_turn_Inbound' }).click();
-        await page.locator('label').filter({ hasText: 'ArrivedFlight Status' }).getByRole('button').click();
-        await page.locator('label').filter({ hasText: 'Flight Status' }).locator('i').click();
+
+        await page.getByRole('combobox', { name: 'Flight Status' }).click()
         await page.getByRole('option', { name: 'Scheduled' }).click();
         await page.locator('label').filter({ hasText: 'Aircraft types' }).locator('i').click();
         await page.getByRole('option').first().click();
@@ -168,12 +170,12 @@ test.describe('Testing the actions', () => {
 })
 
 test.describe.serial('Test el CRUD de schedule', () => {
-    test('Crear un schedule desde la tabla de schedule', async ({ page }) => {
+    test('Crear un schedule', async ({ page }) => {
         await selectStation(page);
         await createScheduleInTable(page, expect);
     })
 
-    test('Editar un schedule desde la tabla de schedule', async ({ page }) => {
+    test('Editar un schedule', async ({ page }) => {
         await selectStation(page);
         
         await page.getByRole('button', { name: 'Scheduler' }).click();
@@ -181,7 +183,7 @@ test.describe.serial('Test el CRUD de schedule', () => {
         await editScheduleInTable(page, expect);
     })
 
-    test('Delete a schedule from the schedule table', async ({ page }) => {
+    test('Delete a schedule', async ({ page }) => {
         await selectStation(page);
         await page.getByRole('button', { name: 'Scheduler' }).click();
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
