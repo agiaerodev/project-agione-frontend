@@ -197,8 +197,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
         await page.getByLabel('Origin').click();
-        await page.getByLabel('Origin').fill('acadiana');
-        await page.getByRole('option', { name: 'Acadiana Rgnl (ARA)' }).click();
+        await page.getByRole('option').nth(2).click();
     
         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').click();
         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').fill('789');
@@ -210,8 +209,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.getByTestId('dynamicField-inboundBlockIn').getByPlaceholder('MM/DD/YYYY HH:mm').fill(yesterday);
     
         await page.getByLabel('Destination').click();
-        await page.getByLabel('Destination').fill('abbot');
-        await page.getByRole('option', { name: 'Abbotsford Int\'l (YXX)' }).click();
+        await page.getByRole('option').nth(2).click();
     
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
