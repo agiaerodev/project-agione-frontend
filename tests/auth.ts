@@ -1,10 +1,9 @@
 import { promises as fs } from 'fs'
 import path from 'path'
-import env from 'src/environments/environment'
 import { config } from './config'
 
 const authFile = 'playwright/.auth/user.json';
-const API = `${env.baseUrl}/api/profile/v1/auth/login`;
+const API = `${config.apiBase}/api/profile/v1/auth/login`;
 
 const parentDirectory = path.resolve(__dirname, '..');
         
