@@ -1,81 +1,44 @@
 name: playwright-tests
 
-on: [push]
+on:
+  push:
+    branches:
+      - stg
 
 jobs:
-  build-and-deploy:
+  test:
+    name: Playwright Tests
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GLOBAL_ACCESS_TOKEN }}
-          fetch-depth: '0'
 
-      - name: Set up Git credentials
-        run: |
-          git config --global credential.helper store
-          git config --global user.password ${{ secrets.GLOBAL_ACCESS_TOKEN }}
-          git config --global url.https://${{ secrets.GLOBAL_ACCESS_TOKEN }}@github.com/.insteadOf https://github.com/
-        shell: bash
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"
-      - name: Debug environment setup
-        run: |
-          echo "Current branch: ${{ github.ref }}"
-          echo "Setting up environment file..."
+          node-version: 20
+          cache: 'npm'
 
-          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            echo "Using production environment"
-            cp src/environments/environment.prod.ts src/environments/environment.ts
-          elif [[ "${{ github.ref }}" == "refs/heads/stg" ]]; then
-            echo "Using staging environment"
-            cp src/environments/environment.stg.ts src/environments/environment.ts
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "Using development environment"
-            cp src/environments/environment.dev.ts src/environments/environment.ts
-          elif [[ "${{ github.ref }}" == "refs/heads/QA" ]]; then
-            echo "Using QA environment"
-            cp src/environments/environment.qa.ts src/environments/environment.ts
-          elif [[ "${{ github.ref }}" == "refs/heads/localhost" ]]; then
-            echo "Using localhost environment"
-            cp src/environments/environment.localhost.ts src/environments/environment.ts
-          fi
-      - name: Install Quasar CLI
+      - name: Create env.js file
         run: |
-          npm cache clean --force
-          npm install -g @quasar/cli
+          echo "const email = '${{ secrets.AGIONE_FRONTEND_TEST_USER_EMAIL }}';" > env.js
+          echo "const password = '${{ secrets.AGIONE_FRONTEND_TEST_USER_PASSWORD }}';" >> env.js
+          echo "module.exports = { email, password };" >> env.js
+          
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-v1
 
       - name: Install dependencies
-        run: |
-          npm install
-      - name: Initialize and update submodules
-        run: |
-          branch="staging"
-          [ "${{ github.ref }}" == "refs/heads/master" ] && branch="master"
-          git submodule update --init --remote
-          git submodule foreach --recursive git fetch
-          git submodule foreach --recursive git checkout $branch
-          git -C src/modules/qramp checkout contractPax
-      - name: Build Agione
-        run: quasar build -m pwa
+        run: npm install
+
       - name: Install Playwright Browsers
-        run: yarn playwright install --with-deps chromium
-      - name: Install wait-on
-        run: npm install -g wait-on
-      - name: Start server
-        run: nohup quasar dev &
-      - name: Wait for server to be ready
-        run: wait-on http://localhost:8080
+        run: npx playwright install --with-deps chromium
+
       - name: Run Playwright tests for setup
-        run: yarn playwright test --project setup
+        run: npx playwright test --project setup
       - name: Run Playwright tests for chromium
-        run: yarn playwright test --project chromium
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 2
+        run: npx playwright test --project chromium
