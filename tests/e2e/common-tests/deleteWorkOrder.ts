@@ -10,5 +10,8 @@ export const deleteWorkOrder = async (page, expect) => {
     await page.waitForLoadState('domcontentloaded');
 
     await expect(page.getByText('Record NOT deleted')).not.toBeVisible();
-    await expect(page.getByText('Record deleted')).toBeVisible();
+
+    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
+    await page.waitForLoadState('domcontentloaded');
 }

@@ -11,6 +11,10 @@ const openModalFull = async (page) => {
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
 
+const goServices = async (page) => {
+    await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
+}
+
 test('Verify the opening and closing of the full modal', async ({ page }) => {
     await openModalFull(page)
 
@@ -253,9 +257,27 @@ test.describe.serial('Testing work-order CRUD', () => {
         await expect(page.locator('#formRampComponent')).toBeHidden();
     })
 
-    const goServices = async (page) => {
-        await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
-    }
+    test('Testing the service date range rule', async ({ page }) => {
+        await openModalFull(page)
+    
+        await goServices(page)
+        
+        const formTitle = page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first();
+    
+        await page.getByRole('list').locator('div').filter({ hasText: 'Services' }).click();
+    
+        await page.getByTestId('dynamicField-Start').first().locator('label').locator('input').fill(moment().add(6, 'year').format('MM/DD/YYYY HH:mm'));
+        await page.getByRole('button', { name: 'Save' }).click();
+        await expect(page.getByText('There are missing fields to complete, check the form')).toBeVisible();
+        await expect(formTitle).toBeVisible();
+    
+        await page.waitForTimeout(5000);
+    
+        await page.getByTestId('dynamicField-End').first().locator('label').locator('input').fill(moment().subtract(6, 'year').format('MM/DD/YYYY HH:mm'));
+        await page.getByRole('button', { name: 'Save' }).click();
+        await expect(page.getByText('There are missing fields to complete, check the form')).toBeVisible();
+        await expect(formTitle).toBeVisible();
+    })
 
     const goToFlightAndChangeAField = async (page: any, label: string, name: string) => {
         await page.locator('#stepComponent div').filter({ hasText: 'Flight' }).nth(2).click();

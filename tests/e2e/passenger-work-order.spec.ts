@@ -182,9 +182,7 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByLabel('Outbound Gate Departure').click();
         await page.getByLabel('Outbound Gate Departure').fill('04');
     
-        await page.getByTestId('dynamicField-inboundBlockIn').getByPlaceholder('MM/DD/YYYY HH:mm').click();
         await page.getByTestId('dynamicField-inboundBlockIn').getByPlaceholder('MM/DD/YYYY HH:mm').fill(yesterday);
-        await page.getByTestId('dynamicField-outboundBlockOut').getByPlaceholder('MM/DD/YYYY HH:mm').click();
         await page.getByTestId('dynamicField-outboundBlockOut').getByPlaceholder('MM/DD/YYYY HH:mm').fill(today);
     
         await expect(page.getByText('Difference (hours):')).toBeVisible();
@@ -217,7 +215,9 @@ test.describe.serial('Test flight CRUD', () => {
     
         await page.getByRole('button', { name: 'Close' }).click();
 
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('load');
+        await page.waitForLoadState('domcontentloaded');
 
         await expect(page.locator('#formRampComponent')).toBeHidden();
         await expect(page.getByText('Record updated')).toBeVisible();
@@ -244,6 +244,11 @@ test.describe('Testing feature non-flight work order', () => {
         await page.getByLabel('*Flight number').click();
         await page.getByLabel('*Flight number').fill('nk1278');
         await page.getByLabel('*Flight number').press('Enter');
+
+        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('load');
+        await page.waitForLoadState('domcontentloaded');
+
         await expect(page.locator('#flight-results-table')).toBeVisible({ timeout: 20000 });
  
         await expect(page.locator('#flight-results-table').getByRole('cell', { name: 'Inbound Flight Number' })).toBeVisible();
@@ -288,9 +293,9 @@ test.describe('Testing feature non-flight work order', () => {
             await expect(page.getByLabel('*Station')).toBeVisible();
             await expect(page.getByLabel('*A/C Type')).toBeVisible();
             await expect(page.getByLabel('*Operation')).toBeVisible();
-            await expect(page.getByLabel('*Carrier')).toBeVisible();
+            await expect(page.getByRole('combobox', { name: '*Carrier' })).toBeVisible();
             await expect(page.getByLabel('*Status')).toBeVisible();
-            await expect(page.getByTestId('dynamicField-scheduleDate').locator('div').filter({ hasText: '*Date Entered' }).first()).toBeVisible();
+            await expect(page.getByTestId('dynamicField-scheduleDate').locator('label').filter({ hasText: '*Date Entered' }).first()).toBeVisible();
             await expect(page.getByPlaceholder('MM/DD/YYYY HH:mm')).toBeVisible();
             await expect(page.getByLabel('Flight Number')).toBeVisible();
         })

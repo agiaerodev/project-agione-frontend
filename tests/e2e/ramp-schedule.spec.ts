@@ -43,24 +43,24 @@ test('Test the schedule modal for selecting the station', async ({ page }) => {
     await expect(page.locator('#masterModalContent')).toBeHidden();
     await expect(page.getByText('Filter schedule')).toBeHidden();
 })
- 
+
 test('Test that the modal requesting the station triggers correctly', async ({ page }) => {
     await selectStation(page);
 
     await page.getByRole('button', { name: 'Scheduler' }).click();
     await page.getByRole('button', { name: 'Back to schedule' }).click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
-    
+
     await page.getByLabel('Collapse "Ramp"').click();
     await page.getByLabel('Expand "Ramp"').click();
     await page.locator('#menuItem-qrampadminworkOrders').click();
     await page.locator('#menuItem-qrampadminschedule').click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
-    
+
     await page.locator('#menuItem-qrampadminpassengerOperationTypes').click();
     await page.locator('#menuItem-qrampadminschedule').click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
-    
+
     await page.getByLabel('Expand "Passenger"').click();
     await page.locator('#menuItem-qrampadminpassengerSchedule').click();
     await expect(page.getByText('Filter schedule')).toBeVisible();
@@ -92,14 +92,14 @@ test('Verify the switch to day view', async ({ page }) => {
 test.describe.serial('Testing the schedule CRUD', () => {
     test('Create schedule', async ({ page }) => {
         await selectStation(page);
-    
+
         await page.locator('.tw-inline-flex > button').first().click();
         await page.getByLabel('*Flight number').click();
         await page.getByLabel('*Flight number').fill('TEST-00');
         await page.getByLabel('*Operation').click();
         await page.getByLabel('*Operation').fill('Full_turn');
         await page.getByText('Full_turn').click();
-    
+
         await page.getByPlaceholder('HH:mm', { exact: true }).click();
         await page.getByPlaceholder('HH:mm', { exact: true }).fill(moment().format('HH:mm'));
         await page.getByPlaceholder('MM/DD/YYYY HH:mm').click();
@@ -109,19 +109,19 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByLabel('Aircraft types').click();
         await page.getByLabel('Aircraft types').fill('A20N');
         await page.getByRole('option', { name: 'A20N' }).locator('div').nth(1).click();
-    
+
         await page.locator('.tw-border > .tw-space-x-2').getByRole('button').nth(0).click();
-        await expect(page.getByText('TEST-00/TEST-00')).toBeVisible({ timeout: 15000 });
+        await expect(page.getByText('TEST-00/TEST-00').first()).toBeVisible({ timeout: 15000 });
     })
-    
+
     test('Edit schedule', async ({ page }) => {
         await selectStation(page);
-    
+
         await expect(page.locator('#kanban-card-actions').nth(2)).toBeVisible();
-        await page.locator('#kanban-card-actions').nth(2).click();
-    
+        await page.getByText('TEST-00/TEST-00').first().click();
+
         await page.getByTestId('dynamicField-inboundFlightNumber').getByRole('button').click();
-        await page.getByLabel('*Flight number').fill('TEST-01');
+        await page.getByTestId('dynamicField-inboundFlightNumber').fill('TEST-01');
         await page.getByTestId('dynamicField-operationTypeId').getByRole('button')   .click();
         await page.getByLabel('*Operation').fill('Half_turn_Inbound');
         await page.getByRole('option', { name: 'Half_turn_Inbound' }).click();
@@ -130,11 +130,11 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByRole('option', { name: 'Scheduled' }).click();
         await page.locator('label').filter({ hasText: 'Aircraft types' }).locator('i').click();
         await page.getByRole('option').first().click();
-    
+
         await page.locator('.tw-border > .tw-space-x-2').getByRole('button').nth(0).click();
         await expect(page.getByText('TEST-01')).toBeVisible();
     })
-    
+
     test('Delete schedule', async ({ page }) => {
         await selectStation(page);
         await page.locator('#kanban-card-actions').nth(3).click();
@@ -148,16 +148,16 @@ test.describe('Testing the actions', () => {
         await selectStation(page);
         await checkFilterFieldsInTheSchedule(page, expect);
     })
-    
+
     // test('Testing the "Copy Tiny URL" action', async ({ page }) => {
     //     await selectStation(page);
-        
+
     //     await page.waitForSelector('svg', { state: 'hidden' })
     //     await expect(page.locator('.actions-content > div > .q-btn').first()).toBeVisible();
     //     await page.locator('.actions-content > div > .q-btn').first().click();
     //     await expect(page.getByText('Tiny URL copied!')).toBeVisible();
     // })
-    
+
     test('Testing the "Export" actions', async ({ page }) => {
         await selectStation(page);
         await checkTheExportActionInTheSchedule(page, expect);
