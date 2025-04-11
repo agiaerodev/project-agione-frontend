@@ -23,7 +23,7 @@ const deleteWO = async (page) => {
     await expect(page.locator('table').getByText(id)).toBeHidden({ timeout: 60000 });
 };
 
-test('Verify the display of actions and filter fields in the passenger section', async ({ page }) => {
+test('Check the display of actions and filter fields', async ({ page }) => {
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });
     await expect(page.getByLabel('Expand "New"')).toBeVisible({ timeout: 20000 });
     await expect(page.locator('div:nth-child(4) > .q-btn')).toBeVisible();
@@ -47,7 +47,7 @@ test('Verify section titles', async ({ page }) => {
 });
 
 test.describe.serial('Test flight CRUD', () => {
-    test('Verify fields in the creation modal and create a work order', async ({ page }) => {
+    test('Check visibility of fields in the creation modal and create a work order', async ({ page }) => {
         await page.getByLabel('Expand "New"').click();
         await page.getByText('Create Flight').click();
         await expect(page.getByText('New Work Order')).toBeVisible();
@@ -115,7 +115,7 @@ test.describe.serial('Test flight CRUD', () => {
     //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
     // })
     
-    test('Update a work order', async ({ page }) => {
+    test('Testing updating a "Work Order" in "Work Orders"', async ({ page }) => {
         await openModalFull(page);
         const FORMAT_DATE = 'MM/DD/YYYY HH:mm';
         const today = moment().format(FORMAT_DATE);
@@ -223,13 +223,13 @@ test.describe.serial('Test flight CRUD', () => {
         await expect(page.getByText('Record updated')).toBeVisible();
     })
     
-    test('Test delete work order', async ({ page }) => { 
+    test('Testing to delete a "Work Order" in "Work Orders"', async ({ page }) => { 
         await deleteWO(page)
     })
 })
 
 test.describe('Testing feature non-flight work order', () => {
-    test('Test the flight search modal and the search results table', async ({ page }) => {
+    test('Testing creating a non-flight from "Additional Flight Services"', async ({ page }) => {
         await page.getByLabel('Expand "New"').click();
         await expect(page.getByText('Create Non Flight')).toBeVisible();
         await page.getByText('Create Non Flight').click();
@@ -262,7 +262,7 @@ test.describe('Testing feature non-flight work order', () => {
     });
 
     test.describe.serial('Test non-flight CRUD', () => {
-        test('Test saving a non-flight work order', async ({ page }) => {
+        test('Testing creating a non-flight from "Non Flight Services"', async ({ page }) => {
             await page.getByLabel('Expand "New"').click();
             await page.getByText('Create Non Flight').click();
             await page.getByRole('button', { name: 'Non Flight Services' }).click();
@@ -286,7 +286,7 @@ test.describe('Testing feature non-flight work order', () => {
             await expect(page.getByText('Non-flight', { exact: true })).toBeVisible();
         });
     
-        test('Verificar non-flight modal', async ({ page }) => {
+        test('Testing that the correct form is displayed in the "flight" section of the edit modal for a "non-flight" type Work Order', async ({ page }) => {
             await openModalFull(page);
         
             await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
@@ -300,7 +300,7 @@ test.describe('Testing feature non-flight work order', () => {
             await expect(page.getByLabel('Flight Number')).toBeVisible();
         })
 
-        test('Test delete work order non-flight', async ({ page }) => {
+        test('Testing to delete a "Work Order" in "Work Orders"', async ({ page }) => {
             await deleteWO(page)
         })
     });
