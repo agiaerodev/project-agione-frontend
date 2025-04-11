@@ -1,5 +1,5 @@
-const email = 'soporte@imaginacolombia.com'
-const password = 'ZAQxsw123@'
+const email = ''
+const password = ''
 
 module.exports = {
   email,
