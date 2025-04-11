@@ -13,7 +13,9 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d '{"content": "🚀 **Playwright Tests **"}' \
+            -d '{
+                "content": "**🧪 Playwright Tests Started...**\n\n📢 *The test execution has begun.*\n\n⏳ Please wait while the tests are running...\n\n🧠 Project: `setup` + `chromium`\n🌐 Environment: `ubuntu-latest`\n\n🔎 Status: `IN PROGRESS` 🚀"
+            }' \
             https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
 
       - name: Checkout repository
