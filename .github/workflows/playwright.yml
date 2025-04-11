@@ -9,6 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Notify Discord - Start
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "🚀 **Playwright Tests **"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -38,5 +45,30 @@ jobs:
 
       - name: Run Playwright tests for setup
         run: npx playwright test --project setup
+
       - name: Run Playwright tests for chromium
         run: npx playwright test --project chromium
+
+      - name: Notify Discord - Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "✅ **Playwright's Tests successfully completed.**"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+
+      - name: Notify Discord - Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "❌ **Playwright Tests failed.**"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+
+      - name: Notify Discord - Cancelled
+        if: cancelled()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "⚠️ **Playwright Tests were canceled.**"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
