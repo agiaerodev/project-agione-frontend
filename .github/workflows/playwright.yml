@@ -46,10 +46,10 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests for setup
-        run: npx playwright test --project setup
+        run: npx playwright test --project setup 
 
       - name: Run Playwright tests for chromium
-        run: npx playwright test --project chromium
+        run: npx playwright test --project chromium --trace on --workers=3
 
       - name: Notify Discord - Success
         if: success()
