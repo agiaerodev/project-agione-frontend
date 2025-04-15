@@ -29,9 +29,8 @@ jobs:
 
       - name: Create env.js file
         run: |
-          echo "const email = '${{ secrets.AGIONE_FRONTEND_TEST_USER_EMAIL }}';" > env.js
-          echo "const password = '${{ secrets.AGIONE_FRONTEND_TEST_USER_PASSWORD }}';" >> env.js
-          echo "const token = '${{ secrets.AZURE_DEPLOY_TOKEN_DEV }}';"
+          echo "const email = '${{ vars.AGIONE_FRONTEND_TEST_USER_EMAIL }}';" > env.js
+          echo "const password = '${{ vars.AGIONE_FRONTEND_TEST_USER_PASSWORD }}';" >> env.js
           echo "module.exports = { email, password };" >> env.js
 
       - name: Cache Playwright Browsers
