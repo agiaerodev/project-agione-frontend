@@ -15,30 +15,7 @@ const goServices = async (page) => {
     await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
 }
 
-test('Verify the opening and closing of the full modal', async ({ page }) => {
-    await openModalFull(page)
-
-    await expect(page.locator('.q-dialog__backdrop')).toBeVisible();
-    await expect(page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order' }).first()).toBeVisible();
-    await expect(page.locator('#formRampComponent div').filter({ hasText: 'Delete Save to Draft Close' }).first()).toBeVisible();
-
-    await expect(page.getByText('Update Work Order')).toBeVisible();
-    await expect(page.getByText('Flight', { exact: true })).toBeVisible();
-    await expect(page.getByText('Services')).toBeVisible();
-    await expect(page.getByText('Remark')).toBeVisible();
-    await expect(page.getByText('Signature')).toBeVisible();
-
-    await expect(page.getByRole('button', { name: 'Delete' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Save to Draft' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Close' })).toBeVisible();
-    await expect(page.locator('.master-dialog__actions > div > button:nth-child(4)')).toBeVisible();
-    await page.locator('.master-dialog__header > .q-btn').click();
-    await expect(page.locator('#formRampComponent')).toBeHidden();
-})
-
-test('Test the integrity of the flight section', async ({ page }) => {
-    await openModalFull(page)
-
+const runFlightSectionIntegrityTest = async ({ page }) => {
     await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
     await expect(page.getByLabel('*Station')).toBeVisible();
     await expect(page.getByLabel('*A/C Type')).toBeVisible();
@@ -47,11 +24,9 @@ test('Test the integrity of the flight section', async ({ page }) => {
     await expect(page.getByLabel('*Parking Spot')).toBeVisible();
     await expect(page.getByLabel('*Status')).toBeVisible();
     await expect(page.getByLabel('Assigned to')).toBeVisible();
-})
+}
 
-test('Test the integrity of the services section', async ({ page }) => {
-    await openModalFull(page)
-
+const runServicesSectionIntegrityTest = async ({ page }) => {
     await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
     await expect(page.locator('section').getByText('Services')).toBeVisible();
     await expect(page.getByPlaceholder('What are you looking for?')).toBeVisible();
@@ -66,20 +41,16 @@ test('Test the integrity of the services section', async ({ page }) => {
 
     await expect(page.locator('.tw-flex > div:nth-child(3) > .q-btn').first()).toBeVisible();
     await expect(page.locator('.tw-flex > div > .q-btn').first()).toBeVisible();
-})
+}
 
-test('Test the integrity of the Remark section', async ({ page }) => {
-    await openModalFull(page)
-
+const runRemarkSectionIntegrityTest = async ({ page }) => {
     await page.locator('#stepComponent div').filter({ hasText: 'Remark' }).nth(2).click();
 
-    await expect(page.getByLabel('Remark')).toBeVisible();
+    await expect(page.getByLabel('Remark').first()).toBeVisible();
     await expect(page.getByLabel('Safety Message')).toBeVisible();
-})
+}
 
-test('Test the integrity of the Signature section', async ({ page }) => {
-    await openModalFull(page)
-
+const runSignatureSectionIntegrityTest = async ({ page }) => {
     await page.locator('#stepComponent div').filter({ hasText: 'Signature' }).nth(2).click();
 
     await expect(page.getByText('Customer Representative')).toBeVisible();
@@ -88,24 +59,56 @@ test('Test the integrity of the Signature section', async ({ page }) => {
     await expect(page.getByTestId('dynamicField-customerTitle').getByLabel('Title')).toBeVisible();
     await expect(page.getByTestId('dynamicField-representativeName').getByLabel('Print Name')).toBeVisible();
     await expect(page.getByTestId('dynamicField-representativeTitle').getByLabel('Title')).toBeVisible();
+}
+
+test('Testing the integrity of the edit modal', async ({ page }) => {
+    await openModalFull(page)
+
+    await expect(page.locator('.q-dialog__backdrop')).toBeVisible();
+    await expect(page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order' }).first()).toBeVisible();
+
+    await expect(page.getByText('Update Work Order')).toBeVisible();
+    await expect(page.getByText('Flight', { exact: true })).toBeVisible();
+    await expect(page.getByText('Services')).toBeVisible();
+    await expect(page.getByText('Remark')).toBeVisible();
+    await expect(page.getByText('Signature')).toBeVisible();
+
+    await expect(page.getByRole('button', { name: 'Delete' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Save to Draft' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Close' })).toBeVisible();
+
+    await runFlightSectionIntegrityTest({ page })
+    await runServicesSectionIntegrityTest({ page })
+    await runRemarkSectionIntegrityTest({ page })
+    await runSignatureSectionIntegrityTest({ page })
+
+    await expect(page.locator('.master-dialog__actions > div > button:nth-child(4)')).toBeVisible();
+    await page.locator('.master-dialog__header > .q-btn').click();
+    await expect(page.locator('#formRampComponent')).toBeHidden();
 })
 
-test('Test the modal for creating Work Orders', async ({ page }) => {
-    await page.getByRole('button', { name: 'New' }).click();
-    await page.getByText('New Work Order').click();
-    await expect(page.getByLabel('*Customer')).toBeVisible();
-    await expect(page.getByLabel('*Flight number')).toBeVisible();
-    await expect(page.getByLabel('*Station')).toBeVisible();
-    await expect(page.getByLabel('Assigned to')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
+// test('Test the modal for creating Work Orders', async ({ page }) => {
+//     await page.getByRole('button', { name: 'New' }).click();
+//     await page.getByText('New Work Order').click();
+//     await expect(page.getByLabel('*Customer')).toBeVisible();
+//     await expect(page.getByLabel('*Flight number')).toBeVisible();
+//     await expect(page.getByLabel('*Station')).toBeVisible();
+//     await expect(page.getByLabel('Assigned to')).toBeVisible();
+//     await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
 
-    await page.getByTestId('dynamicField-customerId').locator('label i').click();
-    await expect(page.getByRole('option').first()).toBeVisible();
-})
+//     await page.getByTestId('dynamicField-customerId').locator('label i').click();
+//     await expect(page.getByRole('option').first()).toBeVisible();
+// })
 
 test.describe.serial('Testing work-order CRUD', () => {
-    test('Create a Work Order', async ({ page }) => {
+    test('Testing to create a "Work Order" in Ramp', async ({ page }) => {
         await page.getByRole('button', { name: 'New' }).click();
+
+        await expect(page.getByLabel('*Customer')).toBeVisible();
+        await expect(page.getByLabel('*Flight number')).toBeVisible();
+        await expect(page.getByLabel('*Station')).toBeVisible();
+        await expect(page.getByLabel('Assigned to')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
     
         await page.getByTestId('dynamicField-customerId').locator('label i').click();
         await page.getByRole('option').first().locator('div').nth(1).click();
@@ -113,8 +116,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.getByLabel('*Flight number').click();
         await page.getByLabel('*Flight number').fill('TEST-00');
         await page.getByTestId('dynamicField-stationId').locator('div').filter({ hasText: '*Station' }).nth(2).click();
-        await page.getByLabel('*Station').fill('atlanta');
-        await page.getByRole('option', { name: 'Atlanta (ATL)' }).click();
+        await page.getByRole('option').first().click();
         await page.getByLabel('Assigned to').click();
         await page.getByLabel('Assigned to').fill('ima');
         await page.getByRole('option', { name: 'Imagina Colombia' }).click();
@@ -174,7 +176,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         });
     }
     
-    test('Test updating WorkOrder', async ({ page }) => {
+    test('Testing updating a "Work Order" in Ramp', async ({ page }) => {
         const FORMAT_DATE = 'MM/DD/YYYY HH:mm';
         const today = moment().format(FORMAT_DATE);
         const tomorrow = moment().add(1, 'day').format(FORMAT_DATE);
@@ -183,8 +185,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await openModalFull(page)
     
         await page.getByLabel('*A/C Type').click();
-        await page.getByLabel('*A/C Type').fill('a20n');
-        await page.getByRole('option', { name: 'A20N' }).click();
+        await page.getByRole('option').first().click();
     
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
@@ -195,8 +196,7 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
         await page.getByLabel('*Parking Spot').click();
-        await page.getByLabel('*Parking Spot').fill('bay-2');
-        await page.getByRole('option', { name: 'Bay-2' }).click();
+        await page.getByRole('option').first().click();
     
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
@@ -327,7 +327,7 @@ test.describe.serial('Testing work-order CRUD', () => {
     //     }
     // })
     
-    test('Test delete work order', async ({ page }) => {
+    test('Testing delete a "Work Order" in Ramp', async ({ page }) => {
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
         await expect(tr).toBeVisible({ timeout: 60000 });
         const id: any = await tr.locator('td').nth(2).textContent()

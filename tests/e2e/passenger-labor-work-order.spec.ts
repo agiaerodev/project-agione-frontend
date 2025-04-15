@@ -6,7 +6,7 @@ const PATH = '/ramp/labor/index'
 test.use({ baseURL: `${config.url}${PATH}` });
 
 test.describe.serial('CRUD', () => {
-    test('Create a record in labor', async ({ page }) => {
+    test('Testing to create a "Work Order" in labor', async ({ page }) => {
         await page.getByRole('button', { name: 'New' }).click();
         await expect(page.getByText('New Work Order')).toBeVisible();
         await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();

@@ -11,7 +11,7 @@ const openModal = async (page) => {
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
 
-test('Passenger Fueling', async ({ page }) => {
+test('Testing visibility of quickFilter type actions and filters', async ({ page }) => {
     await page.waitForLoadState('networkidle')
     await page.waitForLoadState('domcontentloaded')
     await page.waitForLoadState('load')
@@ -47,7 +47,7 @@ test('Passenger Fueling', async ({ page }) => {
 });
 
 test.describe.serial('CRUD', () => {
-    test('Passenger Fueling - New', async ({ page }) => {
+    test('Testing to create a "Work Order" in fueling', async ({ page }) => {
         await page.waitForLoadState('networkidle')
         await page.waitForLoadState('domcontentloaded')
 
@@ -66,7 +66,7 @@ test.describe.serial('CRUD', () => {
         await expect(page.locator('#masterModalContent div').filter({ hasText: 'Update fueling' }).first()).toBeVisible({ timeout: 15000 });
     });
     
-    test('Passenger Fueling - Edit', async ({ page }) => {
+    test('Testing updating a "Work Order" in fueling', async ({ page }) => {
         await page.waitForLoadState('networkidle')
         await page.waitForLoadState('domcontentloaded')
         
@@ -150,7 +150,7 @@ test.describe.serial('CRUD', () => {
     //     }
     // });
     
-    test('Passenger Fueling - Delete', async ({ page }) => {
+    test('Testing to delete a "Work Order" in fueling', async ({ page }) => {
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
         await expect(tr).toBeVisible({ timeout: 60000 });
         const id: any = await tr.locator('td').nth(2).textContent()

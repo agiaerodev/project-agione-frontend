@@ -1,7 +1,7 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone'
-import { 
-    deleteWorkOrder, 
+import {
+    deleteWorkOrder,
     checkActionsAndTextsInTheSchedule,
     checkTheSwitchToTheWeeklyView,
     checkTheSwitchToTheDailyView,
@@ -24,7 +24,9 @@ const selectStation = async (page) => {
     await expect(page.getByRole('button', { name: 'filters' })).toBeVisible();
     await page.getByRole('button', { name: 'filters' }).click();
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
+    await page.waitForLoadState('domcontentloaded')
 }
 
 const openModal = async (page) => {
@@ -32,7 +34,7 @@ const openModal = async (page) => {
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
 
-test('Test the schedule modal for selecting the station', async ({ page }) => {
+test('Testing the integrity of the station selection modal', async ({ page }) => {
     await expect(page.locator('#masterModalContent')).toBeVisible({ timeout: 20000 });
     await expect(page.getByText('Filter schedule')).toBeVisible();
     await expect(page.getByText('You must first select a')).toBeVisible();
@@ -44,7 +46,7 @@ test('Test the schedule modal for selecting the station', async ({ page }) => {
     await expect(page.getByText('Filter schedule')).toBeHidden();
 })
 
-test('Test that the modal requesting the station triggers correctly', async ({ page }) => {
+test('Testing that the modal requesting the station is triggered correctly', async ({ page }) => {
     await selectStation(page);
 
     await page.getByRole('button', { name: 'Scheduler' }).click();
@@ -74,23 +76,19 @@ test('Test that the modal requesting the station triggers correctly', async ({ p
     await expect(page.getByText('Filter schedule')).toBeVisible();
 })
 
-test('Verify the display of actions and text in the schedule', async ({ page }) => {
+test('Testing the visibility of actions and titles in the "schedule"', async ({ page }) => {
     await selectStation(page);
     await checkActionsAndTextsInTheSchedule(page, expect);
 })
 
-test('Verify the switch to week view', async ({ page }) => {
+test('Testing the switch from day view to week view and from week view to day view', async ({ page }) => {
     await selectStation(page);
     await checkTheSwitchToTheWeeklyView(page, expect);
-})
-
-test('Verify the switch to day view', async ({ page }) => {
-    await selectStation(page);
     await checkTheSwitchToTheDailyView(page, expect);
 })
 
 test.describe.serial('Testing the schedule CRUD', () => {
-    test('Create schedule', async ({ page }) => {
+    test('Testing to create a "Work Order" in Schedule', async ({ page }) => {
         await selectStation(page);
 
         await page.locator('.tw-inline-flex > button').first().click();
@@ -114,14 +112,14 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await expect(page.getByText('TEST-00/TEST-00').first()).toBeVisible({ timeout: 15000 });
     })
 
-    test('Edit schedule', async ({ page }) => {
+    test('Testing updating a "Work Order" in Schedule', async ({ page }) => {
         await selectStation(page);
 
         await expect(page.locator('#kanban-card-actions').nth(2)).toBeVisible();
         await page.getByText('TEST-00/TEST-00').first().click();
 
         await page.getByTestId('dynamicField-inboundFlightNumber').getByRole('button').click();
-        await page.getByTestId('dynamicField-inboundFlightNumber').fill('TEST-01');
+        await page.getByTestId('dynamicField-inboundFlightNumber').locator('input').fill('TEST-01');
         await page.getByTestId('dynamicField-operationTypeId').getByRole('button')   .click();
         await page.getByLabel('*Operation').fill('Half_turn_Inbound');
         await page.getByRole('option', { name: 'Half_turn_Inbound' }).click();
@@ -135,16 +133,17 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await expect(page.getByText('TEST-01')).toBeVisible();
     })
 
-    test('Delete schedule', async ({ page }) => {
+    test('Testing to delete a "Work Order" in Schedule', async ({ page }) => {
         await selectStation(page);
-        await page.locator('#kanban-card-actions').nth(3).click();
+        //await page.locator('#kanban-card-actions').nth(3).click();
+        await page.getByTestId('kanbanDay').locator('div').filter({ hasText: 'TEST-01' }).locator('#kanban-card-actions').nth(3).click();
         await deleteSchedule(page, expect);
     })
 })
 
 
 test.describe('Testing the actions', () => {
-    test('Testing the filters', async ({ page }) => {
+    test('Testing the schedule filters', async ({ page }) => {
         await selectStation(page);
         await checkFilterFieldsInTheSchedule(page, expect);
     })
@@ -170,20 +169,20 @@ test.describe('Testing the actions', () => {
 })
 
 test.describe.serial('Test el CRUD de schedule', () => {
-    test('Crear un schedule', async ({ page }) => {
+    test('Testing create a Scheduler', async ({ page }) => {
         await selectStation(page);
         await createScheduleInTable(page, expect);
     })
 
-    test('Editar un schedule', async ({ page }) => {
+    test('Testing updating a scheduler', async ({ page }) => {
         await selectStation(page);
-        
+
         await page.getByRole('button', { name: 'Scheduler' }).click();
         await openModal(page);
         await editScheduleInTable(page, expect);
     })
 
-    test('Delete a schedule', async ({ page }) => {
+    test('Testing the removal of a Scheduler', async ({ page }) => {
         await selectStation(page);
         await page.getByRole('button', { name: 'Scheduler' }).click();
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();

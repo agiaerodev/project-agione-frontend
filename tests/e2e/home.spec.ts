@@ -1,11 +1,9 @@
 import { test, expect } from '../shared-context'
 import { config } from '../config'
 
-const PATH = '/ramp/fueling/index'
+test.use({ baseURL: config.url });
 
-test.use({ baseURL: `${config.url}` });
-
-test('Probar filtros del Dashboard', async ({ page }) => {
+test('Testing the visibility of dashboard filters', async ({ page }) => {
     await page.locator('.actions-content').locator('#filter-button-crud').click();
 
     await expect(page.getByRole('textbox', { name: 'Scheduled date' }).nth(1)).toBeVisible();
