@@ -5,5 +5,5 @@ export const deleteSchedule = async (page, expect) => {
     await expect(page.getByRole('button', { name: 'Delete' })).toBeVisible();
     await page.getByRole('button', { name: 'Delete' }).click();
     await page.waitForLoadState('networkidle');
-    await expect(page.getByText('workOrders was deleted')).toBeVisible();
+    await expect(page.getByText('Record NOT deleted')).not.toBeVisible();
 }

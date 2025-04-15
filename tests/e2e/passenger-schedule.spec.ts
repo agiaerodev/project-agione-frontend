@@ -1,7 +1,7 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone'
-import { 
-    deleteWorkOrder, 
+import {
+    deleteWorkOrder,
     checkActionsAndTextsInTheSchedule,
     checkTheSwitchToTheWeeklyView,
     checkTheSwitchToTheDailyView,
@@ -22,7 +22,9 @@ const selectStation = async (page) => {
     await page.getByRole('option').first().click();
     await expect(page.getByRole('button', { name: 'filters' })).toBeVisible();
     await page.getByRole('button', { name: 'filters' }).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
+    await page.waitForLoadState('domcontentloaded')
 }
 
 const openModal = async (page) => {
@@ -41,7 +43,7 @@ test('Testing the station selection modal in the "schedule"', async ({ page }) =
     await expect(page.locator('#masterModalContent')).toBeHidden();
     await expect(page.getByText('Filter schedule')).toBeHidden();
 })
- 
+
 test('Testing that the modal requesting the station is triggered correctly', async ({ page }) => {
     await selectStation(page);
 
@@ -54,7 +56,7 @@ test('Testing that the modal requesting the station is triggered correctly', asy
     await page.locator('#menuItem-qrampadminpassenger').click();
     await page.locator('#menuItem-qrampadminpassengerSchedule').click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
-    
+
     await page.locator('#menuItem-qrampadminoperationTypesPassenger').click();
     await page.locator('#menuItem-qrampadminpassengerSchedule').click();
     await expect(page.getByText('Filter schedule')).not.toBeVisible();
@@ -218,7 +220,7 @@ test.describe('Testing the actions', () => {
         await selectStation(page);
         await checkFilterFieldsInTheSchedule(page, expect);
     })
-    
+
     // test('Testing the "Copy Tiny URL" action', async ({ page }) => {
     //     await selectStation(page);
     //     await page.waitForSelector('svg', { state: 'hidden' })

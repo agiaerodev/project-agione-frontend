@@ -157,6 +157,7 @@ test.describe.serial('Test flight CRUD', () => {
     
         const origin = page.getByRole('combobox', { name: 'Origin' })
         await origin.click();
+        await page.waitForLoadState('networkidle');
         await page.getByRole('option').nth(2).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
