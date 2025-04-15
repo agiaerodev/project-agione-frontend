@@ -254,7 +254,12 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.getByTestId('dynamicField-representativeTitle').getByLabel('Title').fill('Test title');
     
         await page.getByRole('button', { name: 'Close' }).click();
-        await expect(page.locator('#formRampComponent')).toBeHidden();
+
+        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('load');
+        await page.waitForLoadState('domcontentloaded');
+
+        await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
     })
 
     test('Testing the service date range rule', async ({ page }) => {
