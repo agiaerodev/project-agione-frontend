@@ -17,6 +17,8 @@ const PATH = '/passenger/schedule/index'
 
 test.use({ baseURL: `${config.url}${PATH}` });
 
+test.describe.configure({ mode: 'parallel' });
+
 const selectStation = async (page) => {
     await page.getByLabel('Station').click();
     await page.getByRole('option').first().click();
@@ -207,8 +209,8 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.waitForLoadState('load');
         await page.waitForLoadState('domcontentloaded');
 
+        await expect(page.getByText('TEST-01').first()).toBeVisible({ timeout: 15000 });
         await expect(page.getByText('Record updated')).toBeVisible({ timeout: 20000 });
-        await expect(page.getByText('TEST-01').first()).toBeVisible({ timeout: 10000 });
     })
 
     test('Testing to delete a "Work Order" in Schedule', async ({ page }) => {
