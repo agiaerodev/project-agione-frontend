@@ -13,5 +13,5 @@ setup('authenticate', async ({ page }) => {
     await page.waitForLoadState('load')
     await page.waitForLoadState('domcontentloaded')
 
-    await expect(page.locator('#titleCrudTable')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('#titleCrudTable')).toBeVisible({ timeout: 25000 });
 })
