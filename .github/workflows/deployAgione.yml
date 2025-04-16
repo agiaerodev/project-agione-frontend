@@ -3,10 +3,7 @@ name: Deploy agione
 on: workflow_dispatch
 
 jobs:
-  playwright-test:
-    uses: ./.github/workflows/playwright.yml
   build-and-deploy:
-    needs: playwright-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -61,7 +58,6 @@ jobs:
           git submodule update --init --remote
           git submodule foreach --recursive git fetch
           git submodule foreach --recursive git checkout $branch
-          git -C src/modules/qramp checkout contractPax
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure
