@@ -100,8 +100,10 @@ test.describe.serial('Testing the schedule CRUD', () => {
 
         await waitForPageToBeReady({ page });
 
-        await page.getByPlaceholder('HH:mm', { exact: true }).click();
-        await page.getByPlaceholder('HH:mm', { exact: true }).fill(moment().format('HH:mm'));
+        const sta = page.getByPlaceholder('HH:mm', { exact: true });
+        await sta.waitFor({ state: 'visible' });
+        await sta.click();
+        await sta.fill(moment().format('HH:mm'));
         await page.getByPlaceholder('MM/DD/YYYY HH:mm').fill(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
         await page.getByLabel('Flight Status').click();
         await page.getByRole('option', { name: 'Departed' }).click();
