@@ -10,6 +10,7 @@ import {
     editScheduleInTable,
     checkFilterFieldsInTheSchedule,
     checkActionsInTheScheduleTable,
+    waitForPageToBeReady,
 } from './common-tests'
 import { config } from '../config'
 
@@ -20,13 +21,12 @@ test.use({ baseURL: `${config.url}${PATH}` });
 test.describe.configure({ mode: 'parallel' });
 
 const selectStation = async (page) => {
+    await waitForPageToBeReady({ page });
     await page.getByLabel('Station').click();
     await page.getByRole('option').first().click();
     await expect(page.getByRole('button', { name: 'filters' })).toBeVisible();
     await page.getByRole('button', { name: 'filters' }).click();
-    await page.waitForLoadState('networkidle')
-    await page.waitForLoadState('load')
-    await page.waitForLoadState('domcontentloaded')
+    await waitForPageToBeReady({ page });
 }
 
 const openModal = async (page) => {
@@ -35,6 +35,7 @@ const openModal = async (page) => {
 }
 
 test('Testing the station selection modal in the "schedule"', async ({ page }) => {
+    await waitForPageToBeReady({ page });
     await expect(page.locator('#masterModalContent')).toBeVisible({ timeout: 20000 });
     await expect(page.getByText('Filter schedule')).toBeVisible();
     await expect(page.getByText('You must first select a')).toBeVisible();
@@ -97,6 +98,8 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByLabel('*Operation').fill('Ferry Originate');
         await page.getByRole('option', { name: 'Ferry Originate' }).click();
 
+        await waitForPageToBeReady({ page });
+
         await page.getByPlaceholder('HH:mm', { exact: true }).click();
         await page.getByPlaceholder('HH:mm', { exact: true }).fill(moment().format('HH:mm'));
         await page.getByPlaceholder('MM/DD/YYYY HH:mm').fill(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
@@ -106,7 +109,10 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByRole('option').first().click();
 
         await page.locator('.tw-border > .tw-space-x-2').getByRole('button').nth(0).click();
-        await expect(page.getByText('TEST-00/TEST-00')).toBeVisible({ timeout: 20000 });
+
+        await waitForPageToBeReady({ page });
+
+        await expect(page.getByText('TEST-00/TEST-00').last()).toBeVisible({ timeout: 20000 });
     })
 
     test('Testing updating a "Work Order" in Schedule', async ({ page }) => {
@@ -114,7 +120,7 @@ test.describe.serial('Testing the schedule CRUD', () => {
         const actuaIn = moment().format('MM/DD/YYYY HH:mm');
         const actualOut = moment().add(1, 'days').format('MM/DD/YYYY HH:mm');
 
-        await page.getByText('TEST-00/TEST-').click();
+        await page.getByText('TEST-00/TEST-').last().click();
         await page.getByRole('combobox', { name: '*Customer' }).click();
         await page.getByRole('option').first().click();
 
@@ -205,11 +211,9 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByRole('button', { name: 'Close' }).click();
         await page.locator('#innerLoadingMaster div').waitFor({ state: 'hidden' });
 
-        await page.waitForLoadState('networkidle');
-        await page.waitForLoadState('load');
-        await page.waitForLoadState('domcontentloaded');
+        await waitForPageToBeReady({ page });
 
-        await expect(page.getByText('TEST-01').first()).toBeVisible({ timeout: 15000 });
+        await expect(page.getByText('TEST-01').last()).toBeVisible({ timeout: 15000 });
         await expect(page.getByText('Record updated')).toBeVisible({ timeout: 20000 });
     })
 
