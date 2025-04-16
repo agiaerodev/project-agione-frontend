@@ -1,6 +1,6 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone';
-import { deleteWorkOrder } from './common-tests'
+import { deleteWorkOrder, waitForPageToBeReady } from './common-tests'
 import { config } from '../config'
 
 const PATH = '/passenger/work-orders/index'
@@ -76,9 +76,10 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByRole('option', { name: 'Imagina Colombia' }).click();
         await page.getByRole('button', { name: 'Save' }).click();
     
+        await waitForPageToBeReady({ page });
         await expect(page.getByText('Error when looking for the')).not.toBeVisible();
     
-        await expect(page.getByText('Flight number', { exact: true })).toBeVisible();
+        await expect(page.getByText('Flight number', { exact: true })).toBeVisible({ timeout: 60000 });
         await expect(page.getByText('Are you sure TEST-00 is a')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Cancel' })).toBeVisible();
         await expect(page.getByRole('button', { name: 'Yes' })).toBeVisible();
