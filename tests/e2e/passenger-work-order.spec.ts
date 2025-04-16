@@ -7,6 +7,8 @@ const PATH = '/passenger/work-orders/index'
 
 test.use({ baseURL: `${config.url}${PATH}` });
 
+test.describe.configure({ mode: 'parallel' });
+
 const openModalFull = async (page) => {
     await page.locator('.crudIndexActionsColumn').first().click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();

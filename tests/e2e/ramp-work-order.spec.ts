@@ -6,6 +6,8 @@ import { config } from '../config'
 const PATH = '/ramp/work-orders/index'
 test.use({ baseURL: `${config.url}${PATH}` });
 
+test.describe.configure({ mode: 'parallel' });
+
 const openModalFull = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
