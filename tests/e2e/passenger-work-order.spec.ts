@@ -27,6 +27,7 @@ const deleteWO = async (page) => {
 
 test('Check the display of actions and filter fields', async ({ page }) => {
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });
+    await waitForPageToBeReady({ page });
     await expect(page.getByLabel('Expand "New"')).toBeVisible({ timeout: 20000 });
     await expect(page.locator('div:nth-child(4) > .q-btn')).toBeVisible();
     await expect(page.locator('div:nth-child(5) > .q-btn')).toBeVisible();
