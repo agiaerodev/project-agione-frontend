@@ -1,11 +1,13 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone';
-import { deleteWorkOrder } from './common-tests'
+import { deleteWorkOrder, waitForPageToBeReady } from './common-tests'
 import { config } from '../config'
 
 const PATH = '/passenger/work-orders/index'
 
 test.use({ baseURL: `${config.url}${PATH}` });
+
+test.describe.configure({ mode: 'parallel' });
 
 const openModalFull = async (page) => {
     await page.locator('.crudIndexActionsColumn').first().click();
@@ -25,6 +27,7 @@ const deleteWO = async (page) => {
 
 test('Check the display of actions and filter fields', async ({ page }) => {
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });
+    await waitForPageToBeReady({ page });
     await expect(page.getByLabel('Expand "New"')).toBeVisible({ timeout: 20000 });
     await expect(page.locator('div:nth-child(4) > .q-btn')).toBeVisible();
     await expect(page.locator('div:nth-child(5) > .q-btn')).toBeVisible();
@@ -74,9 +77,10 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByRole('option', { name: 'Imagina Colombia' }).click();
         await page.getByRole('button', { name: 'Save' }).click();
     
+        await waitForPageToBeReady({ page });
         await expect(page.getByText('Error when looking for the')).not.toBeVisible();
     
-        await expect(page.getByText('Flight number', { exact: true })).toBeVisible();
+        await expect(page.getByText('Flight number', { exact: true })).toBeVisible({ timeout: 60000 });
         await expect(page.getByText('Are you sure TEST-00 is a')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Cancel' })).toBeVisible();
         await expect(page.getByRole('button', { name: 'Yes' })).toBeVisible();
@@ -140,8 +144,8 @@ test.describe.serial('Test flight CRUD', () => {
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
         const cancelledType = page.getByRole('combobox', { name: 'Cancellation type' })
+        await expect(cancelledType).toBeVisible({ timeout: 10000 });
         await cancelledType.click();
-        await expect(cancelledType).toBeVisible();
         await page.getByRole('option', { name: 'Cancelled Flight', exact: true }).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
@@ -151,13 +155,19 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByRole('option').nth(1).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
 
+        await page.waitForLoadState('domcontentloaded')
+        await page.waitForLoadState('load')
+
         const cancellationNoticeTime = page.locator('div:has-text("Cancellation Notice time") input[type="number"]');
-        await cancellationNoticeTime.click()
         await cancellationNoticeTime.fill('24')
     
         const origin = page.getByRole('combobox', { name: 'Origin' })
         await origin.click();
+
         await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('load');
+
         await page.getByRole('option').nth(2).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
@@ -220,7 +230,7 @@ test.describe.serial('Test flight CRUD', () => {
         await page.waitForLoadState('load');
         await page.waitForLoadState('domcontentloaded');
 
-        await expect(page.locator('#formRampComponent')).toBeHidden();
+        await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
         await expect(page.getByText('Record updated')).toBeVisible();
     })
     

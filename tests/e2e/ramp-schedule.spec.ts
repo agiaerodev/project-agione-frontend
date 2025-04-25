@@ -17,6 +17,8 @@ import { config } from '../config'
 const PATH = '/ramp/schedule/index'
 test.use({ baseURL: `${config.url}${PATH}` });
 
+test.describe.configure({ mode: 'parallel' });
+
 const selectStation = async (page) => {
     await page.getByLabel('Station').click();
     await page.getByLabel('Station').fill('atlanta');

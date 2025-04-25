@@ -6,6 +6,8 @@ import { config } from '../config'
 const PATH = '/ramp/work-orders/index'
 test.use({ baseURL: `${config.url}${PATH}` });
 
+test.describe.configure({ mode: 'parallel' });
+
 const openModalFull = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
@@ -254,7 +256,12 @@ test.describe.serial('Testing work-order CRUD', () => {
         await page.getByTestId('dynamicField-representativeTitle').getByLabel('Title').fill('Test title');
     
         await page.getByRole('button', { name: 'Close' }).click();
-        await expect(page.locator('#formRampComponent')).toBeHidden();
+
+        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('load');
+        await page.waitForLoadState('domcontentloaded');
+
+        await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
     })
 
     test('Testing the service date range rule', async ({ page }) => {

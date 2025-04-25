@@ -46,11 +46,22 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests for setup
-        run: npx playwright test --project setup 
-
-      - name: Run Playwright tests for chromium
-        run: npx playwright test --project chromium --trace on --workers=3
-
+        run: npx playwright test --project setup --trace on
+      - name: Run Playwright tests home
+        run: npx playwright test home.spec.ts --trace on
+      - name: Run Playwright tests passenger fueling
+        run: npx playwright test passenger-fueling.spec.ts --trace on
+      - name: Run Playwright tests passenger labor work order
+        run: npx playwright test passenger-labor-work-order.spec.ts --trace on
+      - name: Run Playwright tests passenger schedule
+        run: npx playwright test passenger-schedule.spec.ts --trace on --workers 4
+      - name: Run Playwright tests passenger work order
+        run: npx playwright test passenger-work-order.spec.ts --trace on --workers 4
+      - name: Run Playwright tests ramp schedule
+        run: npx playwright test ramp-schedule.spec.ts --trace on --workers 4
+      - name: Run Playwright tests ramp work order
+        run: npx playwright test ramp-work-order.spec.ts --trace on --workers 4
+        
       - name: Notify Discord - Success
         if: success()
         run: |
