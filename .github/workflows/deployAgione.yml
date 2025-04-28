@@ -3,7 +3,10 @@ name: Deploy agione
 on: workflow_dispatch
 
 jobs:
+  playwright-test:
+    uses: ./.github/workflows/playwright.yml
   build-and-deploy:
+    needs: playwright-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -11,7 +14,6 @@ jobs:
         with:
           token: ${{ secrets.GLOBAL_ACCESS_TOKEN }}
           fetch-depth: '0'
-
       - name: Set up Git credentials
         run: |
           git config --global credential.helper store
