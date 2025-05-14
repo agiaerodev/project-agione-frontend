@@ -1,0 +1,87 @@
+name: Playwright Tests
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify Discord - Start
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{
+                "content": "**🧪 Playwright Tests Started...**\n\n📢 *The test execution has begun.*\n\n⏳ Please wait while the tests are running...`\n\n🔎 Status: `IN PROGRESS` 🚀"
+            }' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Create env.js file
+        run: |
+          echo "const email = '${{ vars.AGIONE_FRONTEND_TEST_USER_EMAIL }}';" > env.js
+          echo "const password = '${{ vars.AGIONE_FRONTEND_TEST_USER_PASSWORD }}';" >> env.js
+          echo "module.exports = { email, password };" >> env.js
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-v1
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests for setup
+        run: npx playwright test --project setup --trace on
+      - name: Run Playwright tests home
+        run: npx playwright test home.spec.ts --trace on
+      - name: Run Playwright tests passenger fueling
+        run: npx playwright test passenger-fueling.spec.ts --trace on
+      - name: Run Playwright tests passenger labor work order
+        run: npx playwright test passenger-labor-work-order.spec.ts --trace on
+      - name: Run Playwright tests passenger schedule
+        run: npx playwright test passenger-schedule.spec.ts --trace on --workers 4
+      - name: Run Playwright tests passenger work order
+        run: npx playwright test passenger-work-order.spec.ts --trace on --workers 4
+      - name: Run Playwright tests ramp schedule
+        run: npx playwright test ramp-schedule.spec.ts --trace on --workers 4
+      - name: Run Playwright tests ramp work order
+        run: npx playwright test ramp-work-order.spec.ts --trace on --workers 4
+        
+      - name: Notify Discord - Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "✅ **Playwright's Tests successfully completed.**"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+
+      - name: Notify Discord - Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "❌ **Playwright Tests failed.**"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+
+      - name: Notify Discord - Cancelled
+        if: cancelled()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "⚠️ **Playwright Tests were canceled.**"}' \
+            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX

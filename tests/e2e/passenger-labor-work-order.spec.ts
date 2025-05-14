@@ -1,11 +1,12 @@
 import { test, expect } from '../shared-context'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/labor/index'
+const PATH = '/ramp/labor/index'
 
-test.use({ baseURL: URL });
+test.use({ baseURL: `${config.url}${PATH}` });
 
 test.describe.serial('CRUD', () => {
-    test('Create a record in labor', async ({ page }) => {
+    test('Testing to create a "Work Order" in labor', async ({ page }) => {
         await page.getByRole('button', { name: 'New' }).click();
         await expect(page.getByText('New Work Order')).toBeVisible();
         await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
@@ -39,6 +40,8 @@ test.describe.serial('CRUD', () => {
         await expect(page.getByRole('button', { name: 'Yes' })).toBeVisible();
     
         await page.getByRole('button', { name: 'Yes' }).click();
+
+        await page.waitForLoadState('networkidle');
     
         await expect(page.getByText('What do you want to do?')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Go out to the list' })).toBeVisible();

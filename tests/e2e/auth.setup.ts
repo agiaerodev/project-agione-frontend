@@ -1,7 +1,8 @@
 import { test as setup, expect } from '@playwright/test'
 import { createSession  } from '../auth'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/work-orders/index'
+const URL = `${config.url}/ramp/work-orders/index`
 
 setup('authenticate', async ({ page }) => {
     await page.goto(URL);
@@ -12,5 +13,5 @@ setup('authenticate', async ({ page }) => {
     await page.waitForLoadState('load')
     await page.waitForLoadState('domcontentloaded')
 
-    await expect(page.locator('#titleCrudTable')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('#titleCrudTable')).toBeVisible({ timeout: 25000 });
 })

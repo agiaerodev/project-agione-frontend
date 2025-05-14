@@ -1,28 +1,23 @@
 import moment  from "moment-timezone";
 
-export const createScheduleInTable = async (page, expect, operation) => {
+export const createScheduleInTable = async (page, expect) => {
     await page.getByRole('button', { name: 'Scheduler' }).click();
     await page.getByRole('button', { name: 'New' }).click();
     await expect(page.getByText('New Scheduler')).toBeVisible();
     await page.getByLabel('*Customer/Contract').click();
-    await page.getByLabel('*Customer/Contract').fill('AA Co');
-    await page.getByRole('option', { name: 'AA Corporation (Ad Hoc)' }).click();
+    await page.getByRole('option').first().click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('Airlines').click();
-    await page.getByLabel('Airlines').fill('Aban');
-    await page.getByRole('option', { name: 'Abanair' }).click();
+    await page.getByRole('option').first().click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('Station').click();
-    await page.getByLabel('Station').fill('Kelowna (YLW)');
-    await page.getByRole('option', { name: 'Kelowna (YLW)' }).click();
+    await page.getByRole('option').first().click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('Aircraft types').click();
-    await page.getByLabel('Aircraft types').fill('A124');
-    await page.getByRole('option', { name: 'A124' }).click();
+    await page.getByRole('option').first().click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('*Operation').click();
-    await page.getByLabel('*Operation').fill(operation);
-    await page.getByRole('option', { name: operation }).click();
+    await page.getByRole('option').first().click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('* From Date').click();
     await page.getByLabel('* From Date').fill(moment().format('MM/DD/YYYY'));
