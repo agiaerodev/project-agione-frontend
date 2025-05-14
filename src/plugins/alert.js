@@ -143,7 +143,7 @@ class Alert {
       message: message,
       icon: params.icon,
       progress: params.progress,
-      timeout: params.action ? 0 : (params.timeout || params.timeOut),
+      timeout: params.action ? 0 : (params.timeout ?? params.timeOut),
       color: params.color,
       textColor: params.textColor,
       position: params.pos,
