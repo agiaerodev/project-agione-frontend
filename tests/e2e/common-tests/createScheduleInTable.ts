@@ -18,7 +18,6 @@ export const createScheduleInTable = async (page, expect) => {
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('*Operation').click();
     await page.getByRole('option').first().click();
-    await page.getByLabel('*Operation').click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
     await page.getByLabel('* From Date').click();
     await page.getByLabel('* From Date').fill(moment().format('MM/DD/YYYY'));

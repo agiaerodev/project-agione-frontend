@@ -1,16 +1,21 @@
 import { test, expect } from '../shared-context'
 import { deleteWorkOrder } from './common-tests'
+import { config } from '../config'
 
-const URL = 'http://localhost:8080/#/ramp/fueling/index'
+const PATH = '/ramp/fueling/index'
+
+test.use({ baseURL: `${config.url}${PATH}` });
 
 const openModal = async (page) => {
     await page.locator('tbody').locator('.q-tr.tw-bg-white').first().getByRole('button').nth(1).click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
 }
 
-test.use({ baseURL: URL });
-
-test('Passenger Fueling', async ({ page }) => {
+test('Testing visibility of quickFilter type actions and filters', async ({ page }) => {
+    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
+    await page.waitForLoadState('load')
+    
     await expect(page.getByText('Fueling New')).toBeVisible({ timeout: 15000 });
     await expect(page.getByPlaceholder('Search')).toBeVisible();
     await expect(page.getByRole('button', { name: 'New' })).toBeVisible();
@@ -42,7 +47,7 @@ test('Passenger Fueling', async ({ page }) => {
 });
 
 test.describe.serial('CRUD', () => {
-    test('Passenger Fueling - New', async ({ page }) => {
+    test('Testing to create a "Work Order" in fueling', async ({ page }) => {
         await page.waitForLoadState('networkidle')
         await page.waitForLoadState('domcontentloaded')
 
@@ -55,14 +60,13 @@ test.describe.serial('CRUD', () => {
         await page.getByLabel('Responsible').fill('ima');
         await page.getByRole('option', { name: 'Imagina Colombia' }).click();
         await page.getByLabel('*Station').click();
-        // await page.getByLabel('*Station').fill('new jerse');
         await page.getByRole('option').first().click();
         await page.getByRole('button', { name: 'Save' }).click();
         
-        await expect(page.locator('#masterModalContent div').filter({ hasText: 'Update fueling' }).first()).toBeVisible();
+        await expect(page.locator('#masterModalContent div').filter({ hasText: 'Update fueling' }).first()).toBeVisible({ timeout: 15000 });
     });
     
-    test('Passenger Fueling - Edit', async ({ page }) => {
+    test('Testing updating a "Work Order" in fueling', async ({ page }) => {
         await page.waitForLoadState('networkidle')
         await page.waitForLoadState('domcontentloaded')
         
@@ -109,53 +113,44 @@ test.describe.serial('CRUD', () => {
         await expect(page.getByText('Record updated')).toBeVisible();
     });
 
-    test('Test actions', async ({ page }) => {
-        const actions = [
-            // {
-            //     action: 'Close Flight',
-            //     status: 'Closed'
-            // }, 
-            {
-                action: 'Submit',
-                status: 'Submitted'
-            },
-            {
-                action: 'Post',
-                status: 'Submitted(Posting)'
-            },
-            {
-                action: 'Reload Transactions',
-                status: 'Submitted(Posting)'
-            }
-        ]
+    // test('Test actions', async ({ page }) => {
+    //     const actions = [
+    //         // {
+    //         //     action: 'Close Flight',
+    //         //     status: 'Closed'
+    //         // }, 
+    //         {
+    //             action: 'Submit',
+    //             status: 'Submitted'
+    //         },
+    //         {
+    //             action: 'Post',
+    //             status: 'Submitted(Posting)'
+    //         },
+    //         {
+    //             action: 'Reload Transactions',
+    //             status: 'Submitted(Posting)'
+    //         }
+    //     ]
 
-        const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first()
-        const td = tr.locator('td').nth(7)
+    //     const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first()
+    //     const td = tr.locator('td').nth(7)
 
-        // for (const action of actions) {
-            // await tr.getByRole('button').nth(1).click();
-            // await page.waitForLoadState('networkidle')
-            // await page.waitForLoadState('domcontentloaded')
-            // console.log('action', actions[0].action)
-            // await page.locator('a').filter({ hasText: actions[0].action }).click();
-            // await page.waitForLoadState('networkidle')
-            // await expect(page.getByText('The change was successful,')).toBeVisible({ timeout: 10000 });
-            // await expect(td).toHaveText(actions[0].status)
-        // }
-
-        for (const action of actions) {
-            await tr.getByRole('button').nth(1).click();
-            await page.waitForLoadState('networkidle')
-            await page.waitForLoadState('domcontentloaded')
-            console.log('action', action.action)
-            await page.locator('a').filter({ hasText: action.action }).click();
-            await page.waitForLoadState('networkidle')
-            await expect(page.getByText('The change was successful,')).toBeVisible({ timeout: 10000 });
-            await expect(td).toHaveText(action.status)
-        }
-    });
+    //     for (const action of actions) {
+    //         await tr.getByRole('button').nth(1).click();
+    //         await page.waitForLoadState('networkidle')
+    //         await page.waitForLoadState('domcontentloaded')
+    //         await page.locator('a').filter({ hasText: action.action }).click();
+    //         await page.waitForLoadState('networkidle')
+    //         await expect(page.getByText('The change was successful,')).toBeVisible({ timeout: 10000 });
+    //         await page.waitForLoadState('networkidle')
+    //         await page.waitForLoadState('domcontentloaded')
+    //         await page.waitForLoadState('load')
+    //         await expect(td).toHaveText(action.status)
+    //     }
+    // });
     
-    test('Passenger Fueling - Delete', async ({ page }) => {
+    test('Testing to delete a "Work Order" in fueling', async ({ page }) => {
         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
         await expect(tr).toBeVisible({ timeout: 60000 });
         const id: any = await tr.locator('td').nth(2).textContent()

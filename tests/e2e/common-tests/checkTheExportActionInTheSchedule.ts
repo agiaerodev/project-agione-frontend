@@ -1,6 +1,11 @@
 export const checkTheExportActionInTheSchedule = async (page, expect) => {
+    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded')
+    await page.waitForLoadState('load')
+    
     await page.locator('div:nth-child(6) > .q-btn').first().click();
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });
+    await page.waitForLoadState('networkidle');
     await expect(page.getByText('New Report')).toBeVisible({ timeout: 40000 });
     await expect(page.getByText('Export Schedule with current')).toBeVisible();
     await expect(page.getByLabel('Format')).toBeVisible();
