@@ -23,7 +23,7 @@ export default defineConfig({
             if (!fs.existsSync(authDir)) {
               fs.mkdirSync(authDir, { recursive: true });
             }
-            return null; // Indica que la tarea se completó sin errores
+            return null;
           } catch (error) {
             throw new Error(`Error creating directory: ${error.message}`);
           }
@@ -32,7 +32,7 @@ export default defineConfig({
           try {
             const jsonContent = JSON.stringify(sessionData, null, 2);
             fs.writeFileSync(filePath, jsonContent, 'utf8');
-            return null; // Indica que la tarea se completó sin errores
+            return null;
           } catch (error) {
             throw new Error(`Error writing file: ${error.message}`);
           }
