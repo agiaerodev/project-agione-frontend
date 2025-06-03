@@ -54,14 +54,12 @@ Cypress.Commands.add("openFullModal", () => {
 })
 
 Cypress.Commands.add("deleteWorkOrder", () => {
-    // Proceso de eliminación
     cy.get('a').contains('Delete').click();
     cy.get('button').contains('Cancel').should('be.visible');
     cy.contains('Are you sure, you want to').should('be.visible');
     cy.get('button').contains('Delete').should('be.visible');
     cy.get('button').contains('Delete').click();
 
-    // Verificar que el registro no muestre mensaje de no eliminado
     cy.contains('Record NOT deleted').should('not.exist');
 })
 
@@ -174,8 +172,6 @@ Cypress.Commands.add("createScheduler", (operation) => {
 
     cy.get('input[aria-label="Days Of Week"]').click();
     cy.get('[role="option"]', { timeout: 10000 }).contains('Friday').click();
-    // cy.get('[role="option"]', { timeout: 10000 }).contains('Monday').click();
-    // cy.get('[role="option"]', { timeout: 10000 }).contains('Saturday').click();
 
     cy.contains('New Scheduler').first().click();
 
