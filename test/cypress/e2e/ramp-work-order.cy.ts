@@ -249,13 +249,11 @@ describe('Ramp Work Order', () => {
         cy.get('@row').should('be.visible');
 
         cy.get('@row').find('td').eq(2).invoke('text').then((id) => {
-            // Click en el segundo botón dentro de la fila
+            // Click on the second button in the row
             cy.get('@row').find('button').eq(1).click();
 
-            // Aquí llama a tu helper Cypress para eliminar el WorkOrder
-            cy.deleteWorkOrder(); // Ajusta si tu helper tiene otro nombre
+            cy.deleteWorkOrder();
 
-            // Verifica que el id ya no esté visible en la tabla
             cy.get('table', { timeout: 60000 }).should('not.contain', id.trim());
         });
     })

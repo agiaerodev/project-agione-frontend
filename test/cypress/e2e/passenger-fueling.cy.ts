@@ -101,7 +101,6 @@ describe('Passenger fueling', () => {
         cy.get('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn')
             .first()
             .click();
-        // cy.get('section button').eq(1).find('button').should('be.visible');
 
         cy.get('#stepComponent').contains('Remark').click();
 
@@ -116,12 +115,12 @@ describe('Passenger fueling', () => {
         cy.get('tbody .q-tr.tw-bg-white', { timeout: 60000 }).first().as('row');
         cy.get('@row').should('be.visible');
 
-        // Obtener el texto de la celda (id)
+        // Get the text of the cell (id)
         cy.get('@row').find('td').eq(2).invoke('text').then((id) => {
-            // Click en el segundo botón dentro de la fila
+            // Click on the second button in the row
             cy.get('@row').find('button').eq(1).click();
 
-            // Click en el enlace "Delete"
+            // Click on the "Delete" link
             cy.get('a').contains('Delete').click();
 
             cy.get('button').contains('Cancel').should('be.visible');

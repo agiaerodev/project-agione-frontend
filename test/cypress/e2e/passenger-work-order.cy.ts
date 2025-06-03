@@ -103,10 +103,8 @@ describe('Passenger Work Order', () => {
         cy.get('.q-menu .q-item').eq(2).should('be.visible').click();
         cy.get('#formRampComponent div').contains('Update Work Order Id:').first().click();
 
-        // Charter Rate
         cy.get('input[aria-label="*Charter Rate"]').type('1000');
 
-        // Cancellation type
         cy.contains('Cancellation type').should('be.visible');
         cy.get('input[aria-label="Cancellation type"]').click();
         cy.get('[role="option"]').first().click();
@@ -174,7 +172,6 @@ describe('Passenger Work Order', () => {
         cy.get('input[aria-label="Our delay"]').click();
         cy.get('[role="option"]').contains('Yes').click();
 
-        // Espera a que las alertas se oculten
         cy.contains('Favorite created successfully', { timeout: 10000 }).should('not.exist');
         cy.contains('Favorite deleted successfully', { timeout: 10000 }).should('not.exist');
 
@@ -256,11 +253,13 @@ describe('Passenger Work Order', () => {
 
         cy.get('button').contains('Close').click();
 
-        cy.contains('You have to enter the at least one delay reason for the', { timeout: 15000 }).should('be.visible');
+        cy.contains('You have to enter the at least one delay reason for the', { timeout: 15000 })
+            .should('be.visible');
 
-        // Se espera que la alerta se oculte por que interviene 
-        // en el despliegue de opciones en el campo de código
-        cy.contains('You have to enter the at least one delay reason for the', { timeout: 10000 }).should('not.exist');
+        // The alert is expected to be hidden because it interferes 
+        // with the display of options in the code field.
+        cy.contains('You have to enter the at least one delay reason for the', { timeout: 10000 })
+            .should('not.exist');
 
         cy.get('[role="combobox"][aria-label="Code"]').first().click();
         cy.get('[role="option"]').first().click();
@@ -312,12 +311,12 @@ describe('Passenger Work Order', () => {
         cy.get('tbody .q-tr.tw-bg-white', { timeout: 60000 }).first().as('row');
         cy.get('@row').should('be.visible');
 
-        // Obtener el texto de la celda (id)
+        // Get the text of the cell (id)
         cy.get('@row').find('td').eq(2).invoke('text').then((id) => {
-            // Click en el segundo botón dentro de la fila
+            // Click on the second button in the row
             cy.get('@row').find('button').eq(1).click();
 
-            // Click en el enlace "Delete"
+            // Click on the "Delete" link
             cy.get('a').contains('Delete').click();
 
             cy.get('button').contains('Cancel').should('be.visible');
@@ -343,7 +342,7 @@ describe('Passenger Work Order', () => {
         cy.contains('Enter the fight number and press enter or press the search icon').should('be.visible');
         cy.get('input[aria-label="*Flight number"]').type('nk1278').type('{enter}');
 
-        // Espera a que la tabla de resultados esté visible
+        // Wait for the results table to be visible
         cy.get('#flight-results-table', { timeout: 20000 }).should('be.visible');
 
         cy.get('#flight-results-table')
@@ -372,7 +371,6 @@ describe('Passenger Work Order', () => {
         cy.contains('Create Non Flight').click();
         cy.get('button').contains('Non Flight Services').click();
 
-        // Verificar visibilidad de elementos
         cy.contains('*Customer/Contract').should('be.visible');
         cy.get('.absolute-right > .q-btn').should('be.visible');
         cy.get('input[aria-label="Flight Number"').should('be.visible');
@@ -382,20 +380,16 @@ describe('Passenger Work Order', () => {
         cy.contains('If you left this field empty').should('be.visible');
         cy.get('button').contains('Save').should('be.visible');
 
-        // Interactuar con el campo Customer/Contract
         cy.get('input[aria-label="*Customer/Contract"]').click();
         cy.get('[role="option"]').first().click();
 
-        // Llenar Flight Number
         cy.get('input[aria-label="Flight Number"').type('TEST-01');
 
         cy.get('input[aria-label="Assigned to"]').type('ima');
         cy.get('[role="option"]', { timeout: 10000 }).contains('Imagina Colombia').click();
 
-        // Hacer click en Save
         cy.get('button').contains('Save').click();
 
-        // Verificaciones finales
         cy.contains('Update Work Order Id:', { timeout: 6000 }).should('be.visible');
         cy.contains('Non-flight').should('be.visible');
     })
@@ -403,7 +397,6 @@ describe('Passenger Work Order', () => {
     it('Testing that the correct form is displayed in the "flight" section of the edit modal for a "non-flight" type Work Order', () => {
         cy.openFullModal()
 
-        // Verificar visibilidad de elementos del formulario
         cy.get('[role="combobox"][aria-label="*Customer"]').should('be.visible');
         cy.get('input[aria-label="*Station"]').should('be.visible');
         cy.get('input[aria-label="*A/C Type"]').should('be.visible');
@@ -419,13 +412,11 @@ describe('Passenger Work Order', () => {
         cy.get('@row').should('be.visible');
 
         cy.get('@row').find('td').eq(2).invoke('text').then((id) => {
-            // Click en el segundo botón dentro de la fila
+            // Click on the second button in the row
             cy.get('@row').find('button').eq(1).click();
 
-            // Aquí llama a tu helper Cypress para eliminar el WorkOrder
-            cy.deleteWorkOrder(); // Ajusta si tu helper tiene otro nombre
+            cy.deleteWorkOrder();
 
-            // Verifica que el id ya no esté visible en la tabla
             cy.get('table', { timeout: 60000 }).should('not.contain', id.trim());
         });
     })

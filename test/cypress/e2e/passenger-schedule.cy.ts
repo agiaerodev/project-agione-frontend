@@ -18,7 +18,6 @@ describe('Passenger Schedule', () => {
         cy.contains('You must first select a').should('be.visible');
         cy.get('input[aria-label="Station"]').should('be.visible');
 
-        // Seleccionar la estación
         cy.selectStation();
 
         cy.get('#masterModalContent').should('not.exist');
