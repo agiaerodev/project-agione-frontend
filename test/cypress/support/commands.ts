@@ -113,12 +113,13 @@ Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
         .contains('TEST-01', { timeout: 30000 })
         .parents('[data-testid="kanbanDay"]')
         .find('div')
+		.last()
         .find('button')
-        .eq(3)
         .click();
 
-    cy.get('#cardContent').contains('TEST-01').should('be.visible');
-    cy.contains('Are you sure, you want to').should('be.visible');
+	cy.contains('Is a wrong flight').click();
+
+    cy.contains('Are you sure, you want to delete this record').should('be.visible');
     cy.get('button').contains('Cancel').should('be.visible');
     cy.get('button').contains('Delete').should('be.visible');
     cy.get('button').contains('Delete').click();
