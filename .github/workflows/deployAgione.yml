@@ -57,9 +57,6 @@ jobs:
           git submodule update --init --remote
           git submodule foreach --recursive git fetch
           git submodule foreach --recursive git checkout $branch
-          git -C src/modules/qramp checkout merge_ia_predicted
-          git -C src/modules/qsite checkout ai
-          git -C src/modules/qcrud checkout ai
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure
