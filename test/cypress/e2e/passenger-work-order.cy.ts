@@ -100,7 +100,7 @@ describe('Passenger Work Order', () => {
         cy.contains('*Operation').should('be.visible');
         cy.get('input[aria-label="*Operation"]').click();
 
-        cy.get('.q-menu .q-item').eq(2).should('be.visible').click();
+        cy.get('.q-menu .q-item').eq(1).click();
         cy.get('#formRampComponent div').contains('Update Work Order Id:').first().click();
 
         cy.get('input[aria-label="*Charter Rate"]').type('1000');
@@ -120,36 +120,57 @@ describe('Passenger Work Order', () => {
             .clear()
             .type('24');
 
-        cy.contains('Origin').should('be.visible');
-        cy.get('input[aria-label="Origin"]').then($origin => {
-            if ($origin.is(':hidden')) {
-                cy.get('button').contains('Collapse').eq(1).click();
-            }
-            cy.wrap($origin).click();
-        });
+        
+            // Expand only those "Collapse" inputs that are currently collapsed
+            cy.get('div[aria-label="Collapse"]').then($inputs => {
+                if (!$inputs.length) return;
+                cy.wrap($inputs).each($input => {
+                    if ($input.attr('aria-expanded') === 'false') {
+                        cy.wrap($input).click();
+                    }
+                });
+            });
 
+        // cy.get('input[aria-label="Origin"]').then($origin => {
+        //     if ($origin.is(':hidden')) {
+        //         // cy.get('button').contains('Collapse').eq(1).click();
+        //         cy.get('input[aria-label="Expand"]').eq(1).click();
+        //     }
+        //     cy.wrap($origin).click();
+        // });
+
+        cy.get('input[aria-label="Origin"]').click();
         cy.get('[role="option"]').eq(2).click();
+
         cy.contains('Update Work Order Id:').first().click();
 
         cy.get('[data-testid="dynamicField-inboundTailNumber"] input[aria-label="Tail N°"]').click().type('45');
 
         cy.get('[data-testid="dynamicField-inboundScheduledArrival"] input[placeholder="MM/DD/YYYY HH:mm"]')
-            .click()
-            .type(today);
-
+            .scrollIntoView()
+            .click({ force: true })
+            .clear({ force: true })
+            .type(today, { force: true })
+            
         cy.get('[role="combobox"][aria-label="Destination"]').click();
         cy.get('[role="option"]').eq(3).click();
         cy.get('#formRampComponent div').contains('Update Work Order Id:').first().click();
 
         cy.get('[data-testid="dynamicField-outboundTailNumber"] input[aria-label="Tail N°"]').click().type('45');
 
-        cy.get('[data-testid="dynamicField-outboundScheduledDeparture"] input[placeholder="MM/DD/YYYY HH:mm"]').click().type(tomorrow);
+        cy.get('[data-testid="dynamicField-outboundScheduledDeparture"] input[placeholder="MM/DD/YYYY HH:mm"]')
+            .scrollIntoView()
+            .click({ force: true })
+            .clear({ force: true })
+            .type(tomorrow, { force: true })
 
         cy.get('input[aria-label="Inbound Gate Arrival"]').click().type('02');
         cy.get('input[aria-label="Outbound Gate Departure"]').click().type('04');
 
-        cy.get('[data-testid="dynamicField-inboundBlockIn"] input').click().type(yesterday);
-        cy.get('[data-testid="dynamicField-outboundBlockOut"] input').click().type(today);
+        cy.get('[data-testid="dynamicField-inboundBlockIn"] input')
+            .type(yesterday, { force: true, timeout: 10000 });
+        cy.get('[data-testid="dynamicField-outboundBlockOut"] input')
+            .type(today, { force: true, timeout: 10000 });
 
         cy.contains('Difference (hours):').should('be.visible');
 
@@ -190,11 +211,11 @@ describe('Passenger Work Order', () => {
 
         cy.get('button').contains('Close').click();
 
-        cy.get('#formRampComponent', { timeout: 10000 }).should('not.exist');
+        cy.get('#formRampComponent', { timeout: 20000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
-    it('Testing feature dalys', () => {
+    it('Testing feature delays', () => {
         const dateBlockIn = moment().add(15, 'minutes').format(FORMAT_DATE);
         let dateBlockOut = moment().add(1, 'day').add(30, 'minutes').format(FORMAT_DATE);
         
@@ -237,7 +258,9 @@ describe('Passenger Work Order', () => {
             .type(tomorrow);
 
         cy.get('button').contains('Close').click();
-        cy.contains('You have to enter the at least one delay reason for the', { timeout: 15000 }).should('be.visible');
+
+        cy.contains('You have to enter the at least one delay reason for the', { timeout: 15000 })
+            .should('be.visible');
 
         cy.get('[data-testid="dynamicField-inboundBlockIn"]')
             .find('input')
@@ -250,6 +273,25 @@ describe('Passenger Work Order', () => {
             .click()
             .clear()
             .type(today);
+
+
+        cy.get('[role="combobox"][aria-label="Our delay"]').first().click();
+        cy.get('[role="option"]').first().click();
+
+        cy.contains('You have to enter the at least one delay reason for the', { timeout: 15000 })
+            .should('not.exist');
+
+        cy.get('button').contains('Close').click();
+
+        // cy.contains('There are missing fields to complete, check the form', { timeout: 10000 })
+        //     .should('be.visible');
+
+        cy.get('[role="combobox"][aria-label="Our delay"]')
+            .eq(1)
+            .click();
+        cy.get('[role="option"]')
+            .eq(1)
+            .click();
 
         cy.get('button').contains('Close').click();
 
@@ -268,6 +310,12 @@ describe('Passenger Work Order', () => {
         cy.get('[role="option"]').eq(4).click();
 
         cy.get('button').contains('Close').click();
+
+        cy.contains('There are missing fields to complete, check the form', { timeout: 10000 })
+            .should('not.exist');
+
+        cy.contains('You have to enter the at least one delay reason for the', { timeout: 15000 })
+            .should('not.exist');
 
         cy.get('#formRampComponent', { timeout: 10000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');

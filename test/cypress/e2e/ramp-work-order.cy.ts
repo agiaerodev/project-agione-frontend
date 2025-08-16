@@ -37,7 +37,7 @@ describe('Ramp Work Order', () => {
         cy.get('ul, ol').contains('Services').should('be.visible'); // Ajusta si no es ul/ol
         cy.contains('Equipment').should('be.visible');
         cy.contains('Crew').should('be.visible');
-        cy.get('#stepComponent').contains('Cargo').should('be.visible');
+        cy.get('#stepComponent').contains('Cargo').scrollIntoView().should('be.visible');
 
         cy.get('ul, ol').contains('Services').click(); // Ajusta si no es ul/ol
         cy.get('.fa-star').first().should('be.visible');
@@ -151,6 +151,9 @@ describe('Ramp Work Order', () => {
         // Abrir modal
         cy.get('tbody').find('.q-tr.tw-bg-white').first().find('button').eq(1).click();
         cy.get('a').filter(':contains("Edit")').click();
+
+        cy.get('[aria-label="*Customer"]').click({ timeout: 10000 });
+        cy.get('[role="option"]').first().click();
 
         cy.get('[aria-label="*Parking Spot"]').click();
         cy.get('[role="option"]').first().click();
