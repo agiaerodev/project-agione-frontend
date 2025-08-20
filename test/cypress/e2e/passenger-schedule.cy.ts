@@ -163,9 +163,21 @@ describe('Passenger Schedule', () => {
     // })
 
     it('Testing the modal Quick Close', () => {
+        
+        function clickUntilDateMatches(retries = 10) {
+            cy.get('.agendaResume').then($el => {
+            if (!$el.text().includes('August 19, All Day') && retries > 0) {
+                cy.get('.actions-bar > :nth-child(1) > :nth-child(4)').click();
+                cy.wait(500); // Espera para que el DOM se actualice
+                clickUntilDateMatches(retries - 1);
+            }
+            });
+        }
+        clickUntilDateMatches();
+
         cy.get('[data-testid="kanbanDay"]')
             .find('div')
-            .contains('F9688/F9689', { timeout: 30000 })
+            .contains('F9685', { timeout: 30000 })
             .parents('[data-testid="kanbanDay"]')
             .find('button')
             .first()
@@ -249,12 +261,12 @@ describe('Passenger Schedule', () => {
             .click()
 
         // Seleccionar el campo "Our delay" y elegir primera opción
-        cy.get('.q-stepper__step-inner form > div [role="combobox"][aria-label="Our delay"]')
+        cy.get('.q-stepper__step-inner form > div [role="combobox"][aria-label="*Our delay"]')
           .first()
           .click();
         cy.get('[role="option"]').first().click(); // o .contains('Yes').click();
 
-        cy.get('.q-stepper__step-inner form > div [aria-label="Time"]')
+        cy.get('.q-stepper__step-inner form > div [aria-label="*Time"]')
           .first()
           .type('24')
 
@@ -271,7 +283,7 @@ describe('Passenger Schedule', () => {
             .click()
         cy.contains('Please fill in the delay fields.', { timeout: 20000 }).should('be.visible');
 
-        cy.get('.q-stepper__step-inner form > div [role="combobox"][aria-label="Code"]')
+        cy.get('.q-stepper__step-inner form > div [role="combobox"][aria-label="*Code"]')
           .first()
           .type('99')
         cy.get('[role="option"]').contains('99').click();
@@ -293,7 +305,7 @@ describe('Passenger Schedule', () => {
             .first()
             .type('Test delay comment')
         
-        cy.get('.q-stepper__step-inner form > div [role="combobox"][aria-label="Flight type"]')
+        cy.get('.q-stepper__step-inner form > div [role="combobox"][aria-label="*Flight type"]')
             .first()
             .click()
         cy.get('[role="option"]').eq(1).click();
@@ -343,19 +355,21 @@ describe('Passenger Schedule', () => {
 
         cy.get('[data-testid="kanbanDay"]')
             .find('div')
-            .contains('F9688/F9689', { timeout: 30000 })
+            .contains('F9685', { timeout: 30000 })
             .parents('[data-testid="kanbanDay"]')
             .find('button')
             .eq(1)
             .click()
 
+        // Eliminar servicio
         cy.get('.q-stepper__step-inner')
             .find('section')
             .find('button')
             .eq(2)
             .click()
-
         cy.get('div [role="menu"]').find('i').click()
+
+        cy.wait(1000);
 
         // Hacer clic en el botón para pasar al siguiente paso
         cy.get('.dialogServices .q-dialog__inner > div > div')
@@ -365,7 +379,7 @@ describe('Passenger Schedule', () => {
             .click()
 
         // Eliminar el delay
-        cy.get('.q-stepper__step-inner form > div > section')
+        cy.get('.q-stepper__step-inner form > div > section', { timeout: 10000 })
             .eq(1)
             .find('button')
             .click()
@@ -383,6 +397,9 @@ describe('Passenger Schedule', () => {
             .find('button')
             .first()
             .click()
+
+        cy.contains('Changes saved successfully', { timeout: 30000 })
+            .should('be.visible');
     })
 
     it('Testing to delete a "Work Order" in Schedule', () => {
