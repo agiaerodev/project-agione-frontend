@@ -36,21 +36,7 @@ describe('Ramp Schedule', () => {
         cy.get('#kanban-card-actions').first().should('be.visible');
         cy.contains('TEST-00/TEST-00').first().click();
 
-        cy.get('form').find('.q-expansion-item.q-expansion-item--standard').then($item => {
-            if ($item.first().hasClass('q-expansion-item--collapsed')) {
-                cy.wrap($item.first()).find('.q-expansion-item__container').click();
-            }
-            if ($item.eq(1).hasClass('q-expansion-item--collapsed')) {
-                cy.wrap($item.eq(1)).find('.q-expansion-item__container').click();
-            }
-        });
-
-        cy.get('[data-testid="dynamicField-inboundFlightNumber"]', { timeout: 60000 })
-            .find('input')
-            .clear()
-            .type('TEST-01');
-
-        cy.get('[data-testid="dynamicField-outboundFlightNumber"]', { timeout: 60000 })
+        cy.get('[aria-label="*Flight number"]', { timeout: 60000 })
             .clear()
             .type('TEST-01');
 
