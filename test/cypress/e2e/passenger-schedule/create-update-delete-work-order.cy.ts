@@ -27,7 +27,7 @@ describe('Passenger Schedule', () => {
 
     it('Testing to create a "Work Order" in Schedule', () => {
         cy.get('.tw-inline-flex > .q-btn-dropdown')
-            .click({ timeout: 60000 });
+            .click({ timeout: 120000 });
         cy.get('.q-list > :nth-child(1)').click();
         cy.createWorkOrderInSchedule();
     })

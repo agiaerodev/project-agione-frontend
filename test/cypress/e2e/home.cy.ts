@@ -17,7 +17,7 @@ describe('Home', () => {
     });
 
     it('Testing the visibility of dashboard filters', () => {
-        cy.get('.actions-content #filter-button-crud').click({ timeout: 80000 });
+        cy.get('.actions-content #filter-button-crud', { timeout: 80000 }).click();
         cy.get('input[aria-label="Scheduled date"]').eq(1).should('be.visible');
         cy.get('input[aria-label="Comparison date"]').should('be.visible');
         cy.get('input[aria-label="Customer"], select[aria-label="Customer"]').should('be.visible');

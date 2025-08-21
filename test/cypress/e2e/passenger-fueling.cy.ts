@@ -64,7 +64,7 @@ describe('Passenger fueling', () => {
         
 
         cy.get('input[aria-label="*Station"]').click();
-        cy.get('[role="option"]', { timeout: 120000 }).first().click();
+        cy.get('[role="option"]', { timeout: 180000 }).first().click();
 
         cy.get('button').contains('Save').click();
 

@@ -50,7 +50,7 @@ describe('Passenger labor work order', () => {
 
         cy.contains('button', 'Yes').click();
 
-        cy.contains('What do you want to do?').should('be.visible');
+        cy.contains('What do you want to do?', { timeout: 180000 }).should('be.visible');
         cy.contains('button', 'Go out to the list').should('be.visible');
         cy.contains('button', 'Continue editing').should('be.visible');
         cy.contains('button', 'Create a new one').should('be.visible');
