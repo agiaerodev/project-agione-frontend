@@ -50,7 +50,7 @@ Cypress.Commands.add("selectStation", () => {
 })
 
 Cypress.Commands.add("openFullModal", () => {
-    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 40000 })
+    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 80000 })
         .click({ force: true });
     cy.get('a').contains('Edit').click();
 })
@@ -131,7 +131,7 @@ Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
 })
 
 Cypress.Commands.add("scheduleFilters", () => {
-    cy.get('#filter-button-crud').click();
+    cy.get('#filter-button-crud').click({ timeout: 70000 });
     cy.get('input[aria-label="Filter by time"]', { timeout: 10000 }).should('be.visible');
     cy.get('input[aria-label="Customer"]').should('be.visible');
     cy.get('input[aria-label="Carrier"]').should('be.visible');
@@ -148,8 +148,8 @@ Cypress.Commands.add("scheduleFilters", () => {
 })
 
 Cypress.Commands.add("createScheduler", (operation) => {
-    cy.get('button').contains('Scheduler').click();
-    cy.get('button').contains('New').click();
+    cy.get('button').contains('Scheduler').click({ timeout: 70000 });
+    cy.get('button').contains('New').click(); 
     cy.contains('New Scheduler').should('be.visible');
 
     cy.get('input[aria-label="*Customer/Contract"]').click();

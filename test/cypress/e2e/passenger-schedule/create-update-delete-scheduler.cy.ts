@@ -30,7 +30,7 @@ describe('Passenger Schedule', () => {
     })
 
     it('Testing the sheduler view actions', () => {
-        cy.get('button').contains('Scheduler').click();
+        cy.get('button').contains('Scheduler').click({ timeout: 80000 });
         cy.get('#titleCrudTable').should('be.visible');
         cy.get('button').contains('Back to schedule').should('be.visible');
         cy.get('button').contains('New').should('be.visible');

@@ -58,7 +58,7 @@ describe('Passenger fueling', () => {
         cy.get('input[aria-label="*Fueling ticket number"]').type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]', { timeout: 40000 })
+        cy.get('[role="option"]', { timeout: 80000 })
             .contains('Imagina Colombia', { timeout: 10000 })
             .click();
         

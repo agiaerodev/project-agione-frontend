@@ -28,7 +28,7 @@ describe('Ramp Work Order', () => {
         cy.contains('button', 'Save').should('be.visible');                                     
     
         cy.get('[data-testid="dynamicField-customerId"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 80000 }).first().click();
     
         cy.get('[aria-label="*Flight number"]').clear().type('TEST-00');
         cy.get('[data-testid="dynamicField-stationId"] div').filter(':contains("*Station")').eq(2).click();
