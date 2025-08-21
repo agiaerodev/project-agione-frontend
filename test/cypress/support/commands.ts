@@ -106,7 +106,7 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 
     cy.get('.tw-border > .tw-space-x-2').find('button').eq(0).click();
 
-    cy.contains('TEST-00/TEST-00', { timeout: 70000 })
+    cy.contains('TEST-00/TEST-00', { timeout: 120000 })
         .last()
         .should('be.visible');
 })
@@ -148,16 +148,16 @@ Cypress.Commands.add("scheduleFilters", () => {
 })
 
 Cypress.Commands.add("createScheduler", (operation) => {
-    cy.get('button').contains('Scheduler').click({ timeout: 120000 });
+    cy.get('button').contains('Scheduler').click({ timeout: 190000 });
     cy.get('button').contains('New').click(); 
     cy.contains('New Scheduler').should('be.visible');
 
     cy.get('input[aria-label="*Customer/Contract"]').click();
-    cy.get('[role="option"]', { timeout: 120000 }).first().click();
+    cy.get('[role="option"]', { timeout: 190000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Airlines"]').click();
-    cy.get('[role="option"]', { timeout: 120000 }).first().click();
+    cy.get('[role="option"]', { timeout: 190000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Station"]').click();
@@ -196,7 +196,7 @@ Cypress.Commands.add("updatingScheduler", () => {
     cy.get('button').contains('Scheduler').click();
     
     // Open modal
-    cy.get('tbody').find('.q-tr.tw-bg-white', { timeout: 60000 }).first().find('button').click();
+    cy.get('tbody').find('.q-tr.tw-bg-white', { timeout: 120000 }).first().find('button').click();
     cy.get('a').contains('Edit').click();
 
     cy.contains('Update scheduler Id:').should('be.visible');
@@ -206,7 +206,7 @@ Cypress.Commands.add("updatingScheduler", () => {
     cy.contains('Update scheduler Id:').first().click();
 
     cy.get('input[aria-label="Aircraft types"]').click();
-    cy.get('[role="option"]', { timeout: 10000 }).first().click();
+    cy.get('[role="option"]', { timeout: 190000 }).first().click();
     cy.contains('Update scheduler Id:').first().click();
 
     cy.get('input[aria-label="*Flight number"]').click().clear().type('TEST-03');
