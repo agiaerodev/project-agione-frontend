@@ -53,18 +53,18 @@ describe('Passenger fueling', () => {
     it('Testing to create a "Work Order" in fueling', () => {
         cy.contains('button', 'New').click();
         cy.get('input[aria-label="*Customer/Contract"]').click();
-        cy.get('[role="option"]', { timeout: 10000 }).first().click();
+        cy.get('[role="option"]', { timeout: 190000 }).first().click();
 
         cy.get('input[aria-label="*Fueling ticket number"]').type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]', { timeout: 40000 })
+        cy.get('[role="option"]', { timeout: 190000 })
             .contains('Imagina Colombia', { timeout: 10000 })
             .click();
         
 
         cy.get('input[aria-label="*Station"]').click();
-        cy.get('[role="option"]', { timeout: 10000 }).first().click();
+        cy.get('[role="option"]', { timeout: 190000 }).first().click();
 
         cy.get('button').contains('Save').click();
 
@@ -121,12 +121,12 @@ describe('Passenger fueling', () => {
             cy.get('@row').find('button').eq(1).click();
 
             // Click on the "Delete" link
-            cy.get('a').contains('Delete').click();
+            cy.get('a').contains('Is a wrong flight').click();
 
             cy.get('button').contains('Cancel').should('be.visible');
-            cy.contains('Are you sure, you want to').should('be.visible');
-            cy.get('button').contains('Delete').should('be.visible');
-            cy.get('button').contains('Delete').click();
+            cy.contains('Are you sure you want to delete this work order').should('be.visible');
+            cy.get('button').contains('Yes').should('be.visible');
+            cy.get('button').contains('Yes').click();
 
             cy.contains('Record NOT deleted').should('not.exist');
             cy.get('table', { timeout: 60000 }).should('not.contain', id.trim());
