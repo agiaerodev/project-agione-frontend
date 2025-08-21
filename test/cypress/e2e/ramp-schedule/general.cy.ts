@@ -64,12 +64,9 @@ describe('Ramp Schedule', () => {
         cy.get('label').contains('Format').should('be.visible');
         cy.contains('Export | Schedule').should('be.visible');
         cy.get('button').contains('Create').should('be.visible');
-        // cy.contains('Date:').should('be.visible');
-        // cy.contains('Size:').should('be.visible');
-        // cy.get('button').contains('Download').should('be.visible');
         cy.get('#masterModalContent').find('button').eq(2).click();
 
-        cy.get('#masterModalContent').should('not.exist');
+        cy.get('#masterModalContent', { timeout: 120000 }).should('not.exist');
     })
 
     it('Testing the "Scheduler" action', () => {

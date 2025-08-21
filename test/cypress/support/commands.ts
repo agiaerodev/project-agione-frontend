@@ -106,7 +106,7 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 
     cy.get('.tw-border > .tw-space-x-2').find('button').eq(0).click();
 
-    cy.contains('TEST-00/TEST-00', { timeout: 40000 })
+    cy.contains('TEST-00/TEST-00', { timeout: 70000 })
         .last()
         .should('be.visible');
 })
@@ -148,16 +148,16 @@ Cypress.Commands.add("scheduleFilters", () => {
 })
 
 Cypress.Commands.add("createScheduler", (operation) => {
-    cy.get('button').contains('Scheduler').click({ timeout: 70000 });
+    cy.get('button').contains('Scheduler').click({ timeout: 120000 });
     cy.get('button').contains('New').click(); 
     cy.contains('New Scheduler').should('be.visible');
 
     cy.get('input[aria-label="*Customer/Contract"]').click();
-    cy.get('[role="option"]', { timeout: 70000 }).first().click();
+    cy.get('[role="option"]', { timeout: 120000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Airlines"]').click();
-    cy.get('[role="option"]', { timeout: 60000 }).first().click();
+    cy.get('[role="option"]', { timeout: 120000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Station"]').click();

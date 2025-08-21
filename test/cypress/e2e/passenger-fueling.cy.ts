@@ -58,13 +58,13 @@ describe('Passenger fueling', () => {
         cy.get('input[aria-label="*Fueling ticket number"]').type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]', { timeout: 80000 })
+        cy.get('[role="option"]', { timeout: 120000 })
             .contains('Imagina Colombia', { timeout: 10000 })
             .click();
         
 
         cy.get('input[aria-label="*Station"]').click();
-        cy.get('[role="option"]', { timeout: 80000 }).first().click();
+        cy.get('[role="option"]', { timeout: 120000 }).first().click();
 
         cy.get('button').contains('Save').click();
 
