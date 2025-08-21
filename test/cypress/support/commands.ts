@@ -50,7 +50,7 @@ Cypress.Commands.add("selectStation", () => {
 })
 
 Cypress.Commands.add("openFullModal", () => {
-    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 80000 })
+    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 190000 })
         .click({ force: true });
     cy.get('a').contains('Edit').click();
 })

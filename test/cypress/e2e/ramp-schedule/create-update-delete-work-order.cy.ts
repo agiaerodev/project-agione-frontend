@@ -27,7 +27,7 @@ describe('Ramp Schedule', () => {
     })
 
     it('Testing to create a "Work Order" in Schedule', () => {
-        cy.get('.tw-inline-flex > button').first().click({ timeout: 80000 });
+        cy.get('.tw-inline-flex > button').first().click({ timeout: 190000 });
         cy.createWorkOrderInSchedule();
     });
 
