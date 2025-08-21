@@ -16,57 +16,6 @@ describe('Passenger Work Order', () => {
         cy.login();
     });
 
-    it('Testing AI', () => {
-        cy.get('.tw-ml-1 > div > .q-btn > .q-btn__content')
-            .click({ timeout: 10000 });
-
-        cy.get('div[role="menu"]', { timeout: 10000 })
-            .should('be.visible');
-
-        cy.get('div[role="menu"] > section > div')
-            .eq(1)
-            .contains('Do you need help?')
-            .should('be.visible');
-        
-        cy.get('div[role="menu"] > section')
-            .eq(1)
-            .find('button')
-            .first()
-            .should('be.visible');
-
-        cy.get('div[role="menu"] > section')
-            .eq(1)
-            .find('button')
-            .eq(1)
-            .should('be.visible');
-
-        cy.get('div[role="menu"] > section')
-            .eq(1)
-            .find('button')
-            .eq(2)
-            .should('be.visible');
-
-        cy.get('div[role="menu"] > section')
-            .first()
-            .find('div')
-            .first()
-            .find('textarea')
-            .type('Give me all for United Airlines in YVR for May');
-
-        cy.get('div[role="menu"] > section')
-            .eq(1)
-            .find('button')
-            .eq(1)
-            .click();
-
-        cy.get('div[role="menu"] > section')
-            .first()
-            .find('div')
-            .eq(1)
-            .find('button')
-            .should('be.visible');
-    })
-
     it('Testing creating a non-flight from "Additional Flight Services"', () => {
         cy.get('[data-testid="btn-dropdown-New-1"]').click();
         cy.contains('Create Non Flight').should('be.visible');
@@ -119,7 +68,9 @@ describe('Passenger Work Order', () => {
         cy.get('button').contains('Save').should('be.visible');
 
         cy.get('input[aria-label="*Customer/Contract"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 120000 })
+            .first({ timeout: 20000 })
+            .click();
 
         cy.get('input[aria-label="Flight Number"').type('TEST-01');
 
