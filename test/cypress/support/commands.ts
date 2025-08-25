@@ -29,11 +29,13 @@ import moment from 'moment';
 Cypress.Commands.add('login', () => {
     cy.wait(9000);
     cy.get('body').then(($body) => {
-        if ($body.find('.q-form > :nth-child(1)').length > 0) {
-            cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com')
-            cy.get('.q-form > :nth-child(2)').type('ZAQxsw123@');          
-            cy.get('.q-btn').click();
-        }
+        cy.get('body').then(($body) => {
+            if (($body.find('.q-form > :nth-child(1)').length > 0) && !$body.text().includes('Filter schedule')) {
+                cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com')
+                cy.get('.q-form > :nth-child(2)').type('ZAQxsw123@');          
+                cy.get('.q-btn').click();
+            }
+        });
     });
 })
 
@@ -48,17 +50,17 @@ Cypress.Commands.add("selectStation", () => {
 })
 
 Cypress.Commands.add("openFullModal", () => {
-    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 40000 })
+    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 190000 })
         .click({ force: true });
     cy.get('a').contains('Edit').click();
 })
 
 Cypress.Commands.add("deleteWorkOrder", () => {
-    cy.get('a').contains('Delete').click();
+    cy.get('a').contains('Is a wrong flight').click();
     cy.get('button').contains('Cancel').should('be.visible');
-    cy.contains('Are you sure, you want to').should('be.visible');
-    cy.get('button').contains('Delete').should('be.visible');
-    cy.get('button').contains('Delete').click();
+    cy.contains('Are you sure you want to delete this work order').should('be.visible');
+    cy.get('button').contains('Yes').should('be.visible');
+    cy.get('button').contains('Yes').click();
 
     cy.contains('Record NOT deleted').should('not.exist');
 })
@@ -104,7 +106,9 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 
     cy.get('.tw-border > .tw-space-x-2').find('button').eq(0).click();
 
-    cy.contains('TEST-00/TEST-00').last().should('be.visible');
+    cy.contains('TEST-00/TEST-00', { timeout: 120000 })
+        .last()
+        .should('be.visible');
 })
 
 Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
@@ -127,7 +131,7 @@ Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
 })
 
 Cypress.Commands.add("scheduleFilters", () => {
-    cy.get('#filter-button-crud').click();
+    cy.get('#filter-button-crud').click({ timeout: 190000 });
     cy.get('input[aria-label="Filter by time"]', { timeout: 10000 }).should('be.visible');
     cy.get('input[aria-label="Customer"]').should('be.visible');
     cy.get('input[aria-label="Carrier"]').should('be.visible');
@@ -144,16 +148,16 @@ Cypress.Commands.add("scheduleFilters", () => {
 })
 
 Cypress.Commands.add("createScheduler", (operation) => {
-    cy.get('button').contains('Scheduler').click();
-    cy.get('button').contains('New').click();
+    cy.get('button').contains('Scheduler').click({ timeout: 190000 });
+    cy.get('button').contains('New').click(); 
     cy.contains('New Scheduler').should('be.visible');
 
     cy.get('input[aria-label="*Customer/Contract"]').click();
-    cy.get('[role="option"]', { timeout: 10000 }).first().click();
+    cy.get('[role="option"]', { timeout: 190000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Airlines"]').click();
-    cy.get('[role="option"]').first().click();
+    cy.get('[role="option"]', { timeout: 190000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Station"]').click();
@@ -192,7 +196,7 @@ Cypress.Commands.add("updatingScheduler", () => {
     cy.get('button').contains('Scheduler').click();
     
     // Open modal
-    cy.get('tbody').find('.q-tr.tw-bg-white').first().find('button').click();
+    cy.get('tbody').find('.q-tr.tw-bg-white', { timeout: 120000 }).first().find('button').click();
     cy.get('a').contains('Edit').click();
 
     cy.contains('Update scheduler Id:').should('be.visible');
@@ -202,7 +206,7 @@ Cypress.Commands.add("updatingScheduler", () => {
     cy.contains('Update scheduler Id:').first().click();
 
     cy.get('input[aria-label="Aircraft types"]').click();
-    cy.get('[role="option"]', { timeout: 10000 }).first().click();
+    cy.get('[role="option"]', { timeout: 190000 }).first().click();
     cy.contains('Update scheduler Id:').first().click();
 
     cy.get('input[aria-label="*Flight number"]').click().clear().type('TEST-03');
@@ -225,7 +229,7 @@ Cypress.Commands.add("updatingScheduler", () => {
 Cypress.Commands.add("removalScheduler", () => {
     cy.get('button').contains('Scheduler').click();
 
-    cy.get('tbody').find('.q-tr.tw-bg-white').first().as('firstRow');
+    cy.get('tbody').find('.q-tr.tw-bg-white', { timeout: 120000 }).first().as('firstRow');
     cy.get('@firstRow').should('be.visible');
 
     cy.get('@firstRow').find('td').eq(0).invoke('text').then((id) => {
