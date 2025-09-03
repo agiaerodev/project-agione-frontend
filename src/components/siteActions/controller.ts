@@ -1,8 +1,13 @@
-import {computed, reactive, onMounted, toRefs, onBeforeUnmount, nextTick} from 'vue';
+import {computed, reactive, onMounted, toRefs, onBeforeUnmount, nextTick, ref} from 'vue';
 import {eventBus, store, clone, router, i18n} from 'src/plugins/utils';
 import {Badge, ControllerProps, Organization} from './interface'
 
 export default function controller(props: ControllerProps) {
+
+  const refs = {
+    ankRef: ref(null)
+  }
+
   // States
   const state = reactive({
     configMode: config('app.mode'),
@@ -110,6 +115,14 @@ export default function controller(props: ControllerProps) {
             name: 'app.update.app',
             query: {fromCache: 1}
           })
+        },
+        {
+          name: 'whatIsNew',
+          label: 'What´s New',
+          props: {
+            icon: 'fa-light fa-bullhorn'
+          },
+          action: () => refs.ankRef.value?.open()
         },
         ...customBtns
       ].map(btn => {
@@ -231,5 +244,5 @@ export default function controller(props: ControllerProps) {
     })
   })
 
-  return {...(toRefs(state)), ...computeds, ...methods}
+  return {...(toRefs(state)), ...computeds, ...methods, ...refs}
 }
