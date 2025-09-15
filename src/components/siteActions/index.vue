@@ -1,10 +1,6 @@
 <template>
   <div id="siteActionscomponent">
     <div :class="`row q-gutter-${gutter}`">
-      <announceKit 
-        ref="ankRef" 
-        widget="https://announcekit.co/widgets/v2/4lGzRu" 
-      />
       <!--Actions-->
       <template v-for="(btn, keyAction) in actions.buttons">
         <q-btn
