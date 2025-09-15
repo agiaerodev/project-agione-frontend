@@ -22,13 +22,9 @@ import folders from 'modules/qsite/_components/master/folders/index.vue';
 import promiseTemplate from 'modules/qsite/_components/master/promiseTemplate/index.vue';
 import activities from 'modules/qgamification/_components/categoryView/index.vue';
 import helpText from 'modules/qsite/_components/master/helpText.vue';
-import announceKit from 'announcekit-vue';
 
 
 export default ({ app }) => {
-  // AnnounceKit needs to be declared globally
-  app.use(announceKit);
-  
   //Components
   let components = [
     { name: 'crud', component: crud },
