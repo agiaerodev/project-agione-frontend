@@ -1,5 +1,5 @@
 const environment = {
-  baseUrl: 'http://132.196.152.150:80',
+  baseUrl: 'https://agionedev.azurewebsites.net',
   kbBaseUrl: 'https://kb.agi.aero',
 }
 
