@@ -49,7 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
+          npm install --global yarn
+          echo "Install node Dependencies"
+          yarn
       - name: Initialize and update submodules
         run: |
           branch="staging"
@@ -58,6 +60,7 @@ jobs:
           git submodule foreach --recursive git fetch
           git submodule foreach --recursive git checkout $branch
           git -C src/modules/qramp checkout fixProduct
+          git -C src/modules/qsite checkout audit
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure

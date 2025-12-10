@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  quasar-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quasar-dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
