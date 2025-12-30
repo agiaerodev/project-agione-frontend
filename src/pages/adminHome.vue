@@ -1,30 +1,69 @@
 <template>
   <div id="indexMasterPage" class="relative-position">
-    <!--Page Actions-->
-    <div class="q-mb-md">
-      <page-actions 
-        v-if="showDynamicFilters && dashboardPermissions"
-        :title="$tr($route.meta.title)" 
-        :tour-name="tourName"
-        :excludeActions="excludeActions" 
-        @toggleDynamicFilterModal="toggleDynamicFilterModal"
-        :dynamicFilter="filtersModel"
-        :dynamicFilterValues="getDynamicFilterValues"
-        :dynamicFilterSummary="dynamicFilterSummary"
-        @updateDynamicFilterValues="filters => updateDynamicFilterValues(filters)"
-        :help="helpText"
-      />
-    </div>
+    <div>
+      <q-tabs
+        v-model="tab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="left"
+        no-caps
+        narrow-indicator
+        style="align-items: center"
+      >
+        <q-tab
+          v-for="(dashboard, key) in dashboards"
+          :name="dashboard.name"
+          :label="dashboard.title"
+        />
+      </q-tabs>
 
-    <dashboardRenderer
-      v-if="showDashboard && dashboardPermissions"
-      :dynamicFilterValues="getDynamicFilterValues"
-      :configName="configName"
-    />
+      <q-separator />
+
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel
+          v-for="(dashboard, key) in dashboards"
+          :name="dashboard.name"
+        >
+          <div class="text-h6">{{ dashboard.title }}</div>
+
+          <!--Page Actions-->
+          <div class="q-mb-md">
+            <page-actions
+              v-if="showDynamicFilters && dashboardPermissions"
+              :title="$tr($route.meta.title)"
+              :tour-name="tourName"
+              :systemName="dashboard.name"
+              :excludeActions="excludeActions"
+              @toggleDynamicFilterModal="toggleDynamicFilterModal"
+              :dynamicFilter="dashboard.filters || []"
+              :dynamicFilterValues="getDynamicFilterValues"
+              :dynamicFilterSummary="dynamicFilterSummary"
+              @updateDynamicFilterValues="
+                (filters) => updateDynamicFilterValues(filters)
+              "
+              :help="helpText"
+            />
+          </div>
+
+          <dashboardRenderer
+            :key="'dashboard' + dashboard.name"
+            v-if="showDashboard && dashboardPermissions"
+            :dynamicFilterValues="getDynamicFilterValues"
+            :quickCards="dashboard.quickCards"
+          />
+        </q-tab-panel>
+      </q-tab-panels>
+    </div>
 
     <!--Activities-->
     <div id="adminHomeActivities" class="col-12 q-mb-md">
-      <activities system-name="admin_home_actions" @loaded="loading = false" view="cardImage" />
+      <activities
+        system-name="admin_home_actions"
+        @loaded="loading = false"
+        view="cardImage"
+      />
     </div>
 
     <!--Quick cards-->
@@ -33,10 +72,22 @@
         <!-- QuickCards -->
         <div id="quickCardsContent" class="col-12">
           <div class="row q-col-gutter-md">
-            <div v-for="(groupQuickCard, key) in quickCards" :key="key" class="col-12 col-lg-6">
+            <div
+              v-for="(groupQuickCard, key) in quickCards"
+              :key="key"
+              class="col-12 col-lg-6"
+            >
               <div class="row q-col-gutter-y-md full-width">
-                <div v-for="(item, keyItem) in groupQuickCard" :key="keyItem" class="col-12">
-                  <component :is="item.component" :key="`component${keyItem}`" v-bind="item.props || {}" />
+                <div
+                  v-for="(item, keyItem) in groupQuickCard"
+                  :key="keyItem"
+                  class="col-12"
+                >
+                  <component
+                    :is="item.component"
+                    :key="`component${keyItem}`"
+                    v-bind="item.props || {}"
+                  />
                 </div>
               </div>
             </div>
@@ -51,9 +102,9 @@
 </template>
 <script>
 import { markRaw } from 'vue';
-import dynamicFilter from 'src/modules/qsite/_components/master/dynamicFilter'
-import dashboardRenderer from 'src/modules/qsite/_components/master/dashboardRenderer'
-import service from 'src/modules/qsite/_components/master/dashboardRenderer/services.ts'
+import dynamicFilter from 'src/modules/qsite/_components/master/dynamicFilter';
+import dashboardRenderer from 'src/modules/qsite/_components/master/dashboardRenderer';
+import service from 'src/modules/qsite/_components/master/dashboardRenderer/services.ts';
 import { helper } from 'src/plugins/utils';
 
 export default {
@@ -65,12 +116,13 @@ export default {
     dashboardRenderer,
   },
   mounted() {
-    this.$nextTick(async function() {
+    this.$nextTick(async function () {
       if (this.dashboardPermissions) {
         await this.getFilters();
-        this.excludeActions = []
+        await this.getDashboardByModule();
+        this.excludeActions = [];
       }
-      this.token = await helper.getToken()
+      this.token = await helper.getToken();
       setTimeout(() => {
         this.loading = false;
         this.setQuickCards();
@@ -82,17 +134,22 @@ export default {
     return {
       showDashboard: false,
       excludeActions: ['refresh', 'filter'],
-      configName: `ramp.config.dashboard.quickCards`,
+      configName: `config.dashboard.quickCards`,
       testSchedule: false,
       loading: false,
       quickCards: {},
-      tourName: this.$q.platform.is.desktop ? 'admin_home_tour' : 'admin_home_tour_mobile',
+      tourName: this.$q.platform.is.desktop
+        ? 'admin_home_tour'
+        : 'admin_home_tour_mobile',
       dynamicFilterValues: {},
       dynamicFilterSummary: {},
+      dashboards: {},
+      filters: {},
+      tab: 'main',
       filtersModel: {},
       systemName: 'ramp.passenger-work-orders',
       showDynamicFilterModal: false,
-      token: ''
+      token: '',
     };
   },
   computed: {
@@ -110,26 +167,26 @@ export default {
         title: 'Dashboard',
         description: `
           Need help? Check the documentation for more information about the Dashboard.
-          ${helper.documentationLink(
-            '/docs/agione/dashboard',
-            this.token
-          )}
-        `
-      }
-    }
+          ${helper.documentationLink('/docs/agione/dashboard', this.token)}
+        `,
+      };
+    },
   },
   methods: {
     async setQuickCards() {
       //Get quick cards
       let quickCards = [];
-      let mainConfigs = Object.values(config('main')).map(item => item.quickCards || []);
-      mainConfigs.forEach(item => quickCards = quickCards.concat(item));
+      let mainConfigs = Object.values(config('main')).map(
+        (item) => item.quickCards || []
+      );
+      mainConfigs.forEach((item) => (quickCards = quickCards.concat(item)));
       //Validate Permissions
       let quickCardsToShow = [];
       for (const card of quickCards) {
         if (!card.permission || this.$hasAccess(card.permission)) {
-          let qcComponent = card?.component
-          if(typeof qcComponent == 'function') qcComponent = await qcComponent();
+          let qcComponent = card?.component;
+          if (typeof qcComponent == 'function')
+            qcComponent = await qcComponent();
           card.component = markRaw(qcComponent.default || qcComponent);
           quickCardsToShow.push(card);
         }
@@ -137,8 +194,17 @@ export default {
 
       //Divide quick cards
       let response = {
-        list1: (quickCardsToShow.length >= 2) ? quickCardsToShow.slice(0, (quickCardsToShow.length / 2)) : quickCardsToShow,
-        list2: (quickCardsToShow.length >= 2) ? quickCardsToShow.slice((quickCardsToShow.length / 2), quickCardsToShow.length) : []
+        list1:
+          quickCardsToShow.length >= 2
+            ? quickCardsToShow.slice(0, quickCardsToShow.length / 2)
+            : quickCardsToShow,
+        list2:
+          quickCardsToShow.length >= 2
+            ? quickCardsToShow.slice(
+                quickCardsToShow.length / 2,
+                quickCardsToShow.length
+              )
+            : [],
       };
       //Response
       this.quickCards = response;
@@ -149,11 +215,12 @@ export default {
     updateDynamicFilterValues(filters) {
       this.dynamicFilterValues = filters;
     },
+
     async getFilters() {
       try {
         const configName = `config.filters`;
         const filters = await service.getConfig(configName, true);
-        if (filters?.Isite) this.filtersModel = filters.Isite
+        if (filters?.Isite) this.filtersModel = filters.Isite;
       } catch (error) {
         console.error('Error getting filters', error);
       } finally {
@@ -161,8 +228,21 @@ export default {
           if (this.dynamicFilterValues) this.showDashboard = true;
         }, 900);
       }
-    }
-  }
+    },
+    async getDashboardByModule() {
+      try {
+        const configName = `config.dashboard`;
+        const dashboards = await service.getConfig(configName, true);
+        if (dashboards) this.dashboards = dashboards;
+      } catch (error) {
+        console.error('Error getting filters', error);
+      } finally {
+        setTimeout(() => {
+          if (this.dynamicFilterValues) this.showDashboard = true;
+        }, 900);
+      }
+    },
+  },
 };
 </script>
 <style lang="scss">
