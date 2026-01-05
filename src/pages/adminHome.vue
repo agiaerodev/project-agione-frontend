@@ -21,28 +21,25 @@
 
       <q-separator />
 
-      <q-tab-panels v-model="tab" animated>
+      <q-tab-panels v-model="tab" animated keep-alive>
         <q-tab-panel
           v-for="(dashboard, key) in dashboards"
           :name="dashboard.name"
         >
           <div class="text-h6">{{ dashboard.title }}</div>
 
-          <!--Page Actions-->
+          <!--Page Actions-->          
           <div class="q-mb-md">
             <page-actions
               v-if="showDynamicFilters && dashboardPermissions"
               :title="$tr($route.meta.title)"
               :tour-name="tourName"
-              :systemName="dashboard.name"
               :excludeActions="excludeActions"
-              @toggleDynamicFilterModal="toggleDynamicFilterModal"
-              :dynamicFilter="dashboard.filters || []"
-              :dynamicFilterValues="getDynamicFilterValues"
-              :dynamicFilterSummary="dynamicFilterSummary"
-              @updateDynamicFilterValues="
-                (filters) => updateDynamicFilterValues(filters)
-              "
+              @toggleDynamicFilterModal="toggleDynamicFilterModal(dashboard.name)"
+              :dynamicFilter="dashboard?.filters || []"
+              :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
+              :dynamicFilterSummary="dynamicFilterSummary[dashboard.name]"
+              @updateDynamicFilterValues="(filters) => updateDynamicFilterValues(dashboard.name, filters)"
               :help="helpText"
             />
           </div>
@@ -50,7 +47,7 @@
           <dashboardRenderer
             :key="'dashboard' + dashboard.name"
             v-if="showDashboard && dashboardPermissions"
-            :dynamicFilterValues="getDynamicFilterValues"
+            :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
             :quickCards="dashboard.quickCards"
           />
         </q-tab-panel>
@@ -122,12 +119,11 @@ export default {
         await this.getDashboardByModule();
         this.excludeActions = [];
       }
-      this.token = await helper.getToken();
-      setTimeout(() => {
-        this.loading = false;
-        this.setQuickCards();
-        this.$tour.start(this.tourName);
-      }, 1000);
+      
+      this.token = await helper.getToken();      
+      this.loading = false;
+      this.setQuickCards();
+      this.$tour.start(this.tourName);
     });
   },
   data() {
@@ -141,21 +137,19 @@ export default {
       tourName: this.$q.platform.is.desktop
         ? 'admin_home_tour'
         : 'admin_home_tour_mobile',
-      dynamicFilterValues: {},
-      dynamicFilterSummary: {},
+      dynamicFilterValues: [],
+      dynamicFilterSummary: [],
       dashboards: {},
       filters: {},
       tab: 'main',
       filtersModel: {},
       systemName: 'ramp.passenger-work-orders',
-      showDynamicFilterModal: false,
-      token: '',
+      showDynamicFilterModal: [],
+      token: ''
     };
   },
   computed: {
-    getDynamicFilterValues() {
-      return this.dynamicFilterValues;
-    },
+
     showDynamicFilters() {
       return Object.keys(this.filtersModel).length;
     },
@@ -173,6 +167,9 @@ export default {
     },
   },
   methods: {
+    getDynamicFilterValues(key) {
+      return this.dynamicFilterValues[key];
+    },
     async setQuickCards() {
       //Get quick cards
       let quickCards = [];
@@ -209,39 +206,45 @@ export default {
       //Response
       this.quickCards = response;
     },
-    toggleDynamicFilterModal() {
-      this.showDynamicFilterModal = !this.showDynamicFilterModal;
+    toggleDynamicFilterModal(key) {
+      if(!this.showDynamicFilterModal[key]) return
+      this.showDynamicFilterModal[key] = !this.showDynamicFilterModal[key];
     },
-    updateDynamicFilterValues(filters) {
-      this.dynamicFilterValues = filters;
+    updateDynamicFilterValues(key, filters) {
+      this.dynamicFilterValues[key] = filters;
     },
 
     async getFilters() {
-      try {
+      try {        
         const configName = `config.filters`;
         const filters = await service.getConfig(configName, true);
+        console.log(filters)
         if (filters?.Isite) this.filtersModel = filters.Isite;
       } catch (error) {
         console.error('Error getting filters', error);
-      } finally {
-        setTimeout(() => {
-          if (this.dynamicFilterValues) this.showDashboard = true;
-        }, 900);
       }
     },
     async getDashboardByModule() {
       try {
         const configName = `config.dashboard`;
         const dashboards = await service.getConfig(configName, true);
-        if (dashboards) this.dashboards = dashboards;
+        if (dashboards) {
+          this.dashboards = dashboards;
+          await this.setDashboardFilters();
+          this.showDashboard = true;
+        }
+
       } catch (error) {
         console.error('Error getting filters', error);
-      } finally {
-        setTimeout(() => {
-          if (this.dynamicFilterValues) this.showDashboard = true;
-        }, 900);
       }
     },
+    async setDashboardFilters(){
+      Object.keys(this.dashboards).forEach((dashboard) => {
+        this.dynamicFilterValues[dashboard.name] = dashboard?.filters || {};
+        this.showDynamicFilterModal[dashboard.name] = false;
+      })
+
+    }
   },
 };
 </script>
