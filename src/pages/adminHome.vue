@@ -21,17 +21,17 @@
 
       <q-separator />
 
-      <q-tab-panels v-model="tab" animated keep-alive>
+      <q-tab-panels v-model="tab" v-if="dashboardPermissions" animated="false" keep-alive>
         <q-tab-panel
           v-for="(dashboard, key) in dashboards"
           :name="dashboard.name"
+          v-if="dashboardPermissions"
         >
           <div class="text-h6">{{ dashboard.title }}</div>
 
-          <!--Page Actions-->          
+          <!--Page Actions-->
           <div class="q-mb-md">
             <page-actions
-              v-if="showDynamicFilters && dashboardPermissions"
               :title="$tr($route.meta.title)"
               :tour-name="tourName"
               :excludeActions="excludeActions"
@@ -45,8 +45,8 @@
           </div>
 
           <dashboardRenderer
-            :key="'dashboard' + dashboard.name"
-            v-if="showDashboard && dashboardPermissions"
+            v-if="showDashboard"
+            :key="`dashboard_${dashboard.name}`"
             :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
             :quickCards="dashboard.quickCards"
           />
@@ -115,12 +115,11 @@ export default {
   mounted() {
     this.$nextTick(async function () {
       if (this.dashboardPermissions) {
-        await this.getFilters();
         await this.getDashboardByModule();
         this.excludeActions = [];
       }
-      
-      this.token = await helper.getToken();      
+
+      this.token = await helper.getToken();
       this.loading = false;
       this.setQuickCards();
       this.$tour.start(this.tourName);
@@ -142,17 +141,12 @@ export default {
       dashboards: {},
       filters: {},
       tab: 'main',
-      filtersModel: {},
       systemName: 'ramp.passenger-work-orders',
       showDynamicFilterModal: [],
       token: ''
     };
   },
   computed: {
-
-    showDynamicFilters() {
-      return Object.keys(this.filtersModel).length;
-    },
     dashboardPermissions() {
       return this.$hasAccess('isite.dashboard.index');
     },
@@ -212,17 +206,7 @@ export default {
     },
     updateDynamicFilterValues(key, filters) {
       this.dynamicFilterValues[key] = filters;
-    },
-
-    async getFilters() {
-      try {        
-        const configName = `config.filters`;
-        const filters = await service.getConfig(configName, true);
-        console.log(filters)
-        if (filters?.Isite) this.filtersModel = filters.Isite;
-      } catch (error) {
-        console.error('Error getting filters', error);
-      }
+      this.showDashboard = true;
     },
     async getDashboardByModule() {
       try {
@@ -231,7 +215,6 @@ export default {
         if (dashboards) {
           this.dashboards = dashboards;
           await this.setDashboardFilters();
-          this.showDashboard = true;
         }
 
       } catch (error) {
@@ -243,7 +226,6 @@ export default {
         this.dynamicFilterValues[dashboard.name] = dashboard?.filters || {};
         this.showDynamicFilterModal[dashboard.name] = false;
       })
-
     }
   },
 };
