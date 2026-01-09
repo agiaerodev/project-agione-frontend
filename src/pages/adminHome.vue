@@ -1,6 +1,6 @@
 <template>
   <div id="indexMasterPage" class="relative-position">
-    <div>
+    <div  v-if="dashboardPermissions">
       <q-tabs
         v-model="tab"
         dense
@@ -15,47 +15,32 @@
         <q-tab v-for="(dashboard, index) in dashboards" :key="index" :name="dashboard.name"  :label="dashboard.title" />
       </q-tabs>
 
-      <q-separator />
-
-      <q-tab-panels v-model="tab" v-if="dashboardPermissions" :animated="false" >
-        
-        <q-tab-panel
-          v-for="(dashboard, index) in dashboards"
-          :name="dashboard.name"
-          v-if="dashboardPermissions"
-        >
-          <div class="text-h6">{{ dashboard.title }}</div>
+      <q-separator />      
+      <template v-for="(dashboard, index) in dashboards" :key="index">
+        <div class="tw-pt-2"  v-if="tab == dashboard.name">
           <!--Page Actions-->
-          <keep-alive>
-            <div class="q-mb-md">
-              <page-actions
-                :title="$tr($route.meta.title)"
-                :tour-name="tourName"
-                :excludeActions="excludeActions"
-                @toggleDynamicFilterModal="toggleDynamicFilterModal(dashboard.name)"
-                :dynamicFilter="dashboard?.filters || []"
-                :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
-                :dynamicFilterSummary="dynamicFilterSummary[dashboard.name]"
-                @updateDynamicFilterValues="(filters) => updateDynamicFilterValues(dashboard.name, filters)"
-                :help="helpText"
-              />
-            </div>
-          </keep-alive>
-
+          <div class="q-mb-md">
+            <page-actions                
+              :systemName="dashboard.name"
+              :title="dashboard.title"
+              :tour-name="tourName"                
+              :excludeActions="excludeActions"
+              @toggleDynamicFilterModal="toggleDynamicFilterModal(dashboard.name)"
+              :dynamicFilter="dashboard?.filters || []"
+              :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
+              :dynamicFilterSummary="dynamicFilterSummary[dashboard.name]"
+              @updateDynamicFilterValues="(filters) => updateDynamicFilterValues(dashboard.name, filters)"
+              :help="helpText"
+            />
+          </div>
           <dashboardRenderer
-            v-if="showDashboard"
             :key="`dashboard_${dashboard.name}`"
             :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
             :quickCards="dashboard.quickCards"
           />
-        </q-tab-panel>
-        
-      </q-tab-panels>
+        </div>
+      </template>        
     </div>
-
-
-    
-
 
 
     <!--Activities-->
@@ -210,15 +195,18 @@ export default {
     },
     updateDynamicFilterValues(key, filters) {
       this.dynamicFilterValues[key] = filters;
-      this.showDashboard = true;
+      
     },
     async getDashboardByModule() {
       try {
         const configName = `config.dashboard`;
         const dashboards = await service.getConfig(configName, true);
         if (dashboards) {
-          this.dashboards = dashboards;
+          this.dashboards = Object.values(dashboards)
+          this.dashboards = this.dashboards.filter(dashboard => this.$hasAccess(dashboard.permission));
+          this.tab = this.dashboards[0]?.name;          
           await this.setDashboardFilters();
+          this.showDashboard = true;
         }
 
       } catch (error) {
@@ -226,7 +214,7 @@ export default {
       }
     },
     async setDashboardFilters(){
-      Object.keys(this.dashboards).forEach((dashboard) => {
+      this.dashboards.forEach((dashboard) => {
         this.dynamicFilterValues[dashboard.name] = dashboard?.filters || {};
         this.showDynamicFilterModal[dashboard.name] = false;
       })
