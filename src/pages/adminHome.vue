@@ -12,37 +12,35 @@
         narrow-indicator
         style="align-items: center"
       >
-        <q-tab
-          v-for="(dashboard, key) in dashboards"
-          :name="dashboard.name"
-          :label="dashboard.title"
-        />
+        <q-tab v-for="(dashboard, index) in dashboards" :key="index" :name="dashboard.name"  :label="dashboard.title" />
       </q-tabs>
 
       <q-separator />
 
-      <q-tab-panels v-model="tab" v-if="dashboardPermissions" animated="false" keep-alive>
+      <q-tab-panels v-model="tab" v-if="dashboardPermissions" :animated="false" >
+        
         <q-tab-panel
-          v-for="(dashboard, key) in dashboards"
+          v-for="(dashboard, index) in dashboards"
           :name="dashboard.name"
           v-if="dashboardPermissions"
         >
           <div class="text-h6">{{ dashboard.title }}</div>
-
           <!--Page Actions-->
-          <div class="q-mb-md">
-            <page-actions
-              :title="$tr($route.meta.title)"
-              :tour-name="tourName"
-              :excludeActions="excludeActions"
-              @toggleDynamicFilterModal="toggleDynamicFilterModal(dashboard.name)"
-              :dynamicFilter="dashboard?.filters || []"
-              :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
-              :dynamicFilterSummary="dynamicFilterSummary[dashboard.name]"
-              @updateDynamicFilterValues="(filters) => updateDynamicFilterValues(dashboard.name, filters)"
-              :help="helpText"
-            />
-          </div>
+          <keep-alive>
+            <div class="q-mb-md">
+              <page-actions
+                :title="$tr($route.meta.title)"
+                :tour-name="tourName"
+                :excludeActions="excludeActions"
+                @toggleDynamicFilterModal="toggleDynamicFilterModal(dashboard.name)"
+                :dynamicFilter="dashboard?.filters || []"
+                :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
+                :dynamicFilterSummary="dynamicFilterSummary[dashboard.name]"
+                @updateDynamicFilterValues="(filters) => updateDynamicFilterValues(dashboard.name, filters)"
+                :help="helpText"
+              />
+            </div>
+          </keep-alive>
 
           <dashboardRenderer
             v-if="showDashboard"
@@ -51,8 +49,14 @@
             :quickCards="dashboard.quickCards"
           />
         </q-tab-panel>
+        
       </q-tab-panels>
     </div>
+
+
+    
+
+
 
     <!--Activities-->
     <div id="adminHomeActivities" class="col-12 q-mb-md">
