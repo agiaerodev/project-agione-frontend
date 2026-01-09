@@ -21,7 +21,7 @@
 
       <q-separator />
 
-      <q-tab-panels v-model="tab" v-if="dashboardPermissions" animated="false" keep-alive>
+      <q-tab-panels v-model="tab" v-if="dashboardPermissions" :animated="false" keep-alive>
         <q-tab-panel
           v-for="(dashboard, key) in dashboards"
           :name="dashboard.name"
