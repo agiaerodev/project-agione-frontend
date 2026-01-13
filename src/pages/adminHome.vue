@@ -1,29 +1,33 @@
 <template>
   <div id="indexMasterPage" class="relative-position">
-    <div  v-if="dashboardPermissions">
-      <q-tabs
-        v-model="tab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="left"
-        no-caps
-        narrow-indicator
-        style="align-items: center"
-      >
-        <q-tab v-for="(dashboard, index) in dashboards" :key="index" :name="dashboard.name"  :label="dashboard.title" />
-      </q-tabs>
+    <div v-if="dashboardPermissions">
+      <!-- Tabs -->
+      <template v-if="showTabs">
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="left"
+          no-caps
+          narrow-indicator
+          style="align-items: center"
+        >
+          <q-tab v-for="(dashboard, index) in dashboards" :key="index" :name="dashboard.name"  :label="dashboard.title" />
+        </q-tabs>
+        <q-separator />
+      </template>
 
-      <q-separator />      
+      <!-- Dashboards -->
       <template v-for="(dashboard, index) in dashboards" :key="index">
         <div class="tw-pt-2"  v-if="tab == dashboard.name">
           <!--Page Actions-->
           <div class="q-mb-md">
-            <page-actions                
+            <page-actions
               :systemName="dashboard.name"
               :title="dashboard.title"
-              :tour-name="tourName"                
+              :tour-name="tourName"
               :excludeActions="excludeActions"
               @toggleDynamicFilterModal="toggleDynamicFilterModal(dashboard.name)"
               :dynamicFilter="dashboard?.filters || []"
@@ -39,7 +43,7 @@
             :quickCards="dashboard.quickCards"
           />
         </div>
-      </template>        
+      </template>
     </div>
 
 
@@ -148,6 +152,9 @@ export default {
         `,
       };
     },
+    showTabs() {
+      return this.dashboards.length > 1;
+    },
   },
   methods: {
     getDynamicFilterValues(key) {
@@ -195,7 +202,7 @@ export default {
     },
     updateDynamicFilterValues(key, filters) {
       this.dynamicFilterValues[key] = filters;
-      
+
     },
     async getDashboardByModule() {
       try {
@@ -204,7 +211,7 @@ export default {
         if (dashboards) {
           this.dashboards = Object.values(dashboards)
           this.dashboards = this.dashboards.filter(dashboard => this.$hasAccess(dashboard.permission));
-          this.tab = this.dashboards[0]?.name;          
+          this.tab = this.dashboards[0]?.name || 'main'
           await this.setDashboardFilters();
           this.showDashboard = true;
         }
