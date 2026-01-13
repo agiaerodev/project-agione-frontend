@@ -716,10 +716,11 @@ class Helper {
 
     return `${device} ${version}`;
   }
-  documentationLink(path, token) {
+  documentationLink(path, token, isBaseUrl=true) {
+    if (!path) return ''
     const baseUrl = app.kbBaseUrl
     
-    const url = `${baseUrl}${path}`
+    const url = `${isBaseUrl ? baseUrl : ''}${path}`
     const parsedUrl = new URL(url);
     const hash = parsedUrl.hash ? parsedUrl.hash : ''
     const href = `${url.replace(/#.*$/, '')}?token=${token}${hash}`

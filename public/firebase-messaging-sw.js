@@ -14,25 +14,25 @@ importScripts('/service-worker.js');
 const initializingFirebaseApp = async () => {
     try {
         const md5Hash = CryptoJS.MD5(`https://one.allianceground.com${moment().format('YYYY-MM-DD')}firebase`).toString();
-        const response = await fetch(`https://staging-siembra-coffe.ozonohosting.com/api/notification/v1/providers/firebase?filter={%22field%22:%20%22system_name%22}&token=${md5Hash}`);
+        const response = await fetch(`https://prod-agione-notifier.ozonohosting.com/api/notification/v1/providers/firebase?filter={%22field%22:%20%22system_name%22}&token=${md5Hash}`);
         const json = await response.json();
-    
+
         if(json.errors === 'Unauthorized') {
             resolve(response);
             return
         };
 
         firebase.initializeApp({
-            apiKey: json.data.fields.firebaseApiKey,
-            authDomain: json.data.fields.firebaseAuthDomain,
-            projectId: json.data.fields.firebaseProjectId,
-            storageBucket: json.data.fields.firebaseStorageBucket,
-            messagingSenderId: json.data.fields.firebaseMessagingSenderId,
-            appId: json.data.fields.firebaseAppId,
-            measurementId: json.data.fields.firebaseMeasurementId
+          apiKey: json.data.fields.firebaseApiKey,
+          authDomain: json.data.fields.authDomain,
+          projectId: json.data.fields.projectId,
+          storageBucket: json.data.fields.storageBucket,
+          messagingSenderId: json.data.fields.messagingSenderId,
+          appId: json.data.fields.appId,
+          measurementId: json.data.fields.measurementId
         });
-    
-    
+
+
         // Retrieve an instance of Firebase Messaging so that it can handle background
         // messages.
         const messaging = firebase.messaging();

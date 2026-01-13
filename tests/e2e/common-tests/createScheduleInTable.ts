@@ -1,0 +1,45 @@
+import moment  from "moment-timezone";
+
+export const createScheduleInTable = async (page, expect) => {
+    await page.getByRole('button', { name: 'Scheduler' }).click();
+    await page.getByRole('button', { name: 'New' }).click();
+    await expect(page.getByText('New Scheduler')).toBeVisible();
+    await page.getByLabel('*Customer/Contract').click();
+    await page.getByRole('option').first().click();
+    await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await page.getByLabel('Airlines').click();
+    await page.getByRole('option').first().click();
+    await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await page.getByLabel('Station').click();
+    await page.getByRole('option').first().click();
+    await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await page.getByLabel('Aircraft types').click();
+    await page.getByRole('option').first().click();
+    await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await page.getByLabel('*Operation').click();
+    await page.getByRole('option').first().click();
+    await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await page.getByLabel('* From Date').click();
+    await page.getByLabel('* From Date').fill(moment().format('MM/DD/YYYY'));
+    await page.getByLabel('* Until Date').click();
+    await page.getByLabel('* Until Date').fill(moment().add(1, 'day').format('MM/DD/YYYY'));
+    await page.getByLabel('Days Of Week').click();
+    await page.getByRole('option', { name: 'Friday' }).click();
+    await page.getByRole('option', { name: 'Monday' }).click();
+    await page.getByRole('option', { name: 'Saturday' }).click();
+    await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await page.getByLabel('*Flight number').click();
+    await page.getByLabel('*Flight number').fill('TEST-02');
+    await page.getByLabel('* Inbound Schedule Arrival').click();
+    await page.getByLabel('* Inbound Schedule Arrival').fill(moment().format('HH:mm'));
+    await page.getByLabel('*Outbound Flight Number').click();
+    await page.getByLabel('*Outbound Flight Number').fill('547');
+    await page.getByLabel('*Outbound Schedule Departure').click();
+    await page.getByLabel('*Outbound Schedule Departure').fill(moment().add(1, 'hour').format('HH:mm'));
+    await page.getByLabel('Dep. +Days').click();
+    await page.getByLabel('Dep. +Days').fill('7');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#masterModalContent #innerLoadingMaster circle')).toBeVisible();
+    await page.locator('#masterModalContent #innerLoadingMaster circle').waitFor({ state: 'hidden'});
+    await expect(page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first()).toBeHidden();
+}
