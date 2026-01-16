@@ -38,6 +38,7 @@
             />
           </div>
           <dashboardRenderer
+            v-if="showDashboard"
             :key="`dashboard_${dashboard.name}`"
             :dynamicFilterValues="getDynamicFilterValues(dashboard.name)"
             :quickCards="dashboard.quickCards"
@@ -114,7 +115,7 @@ export default {
 
       this.token = await helper.getToken();
       this.loading = false;
-      this.setQuickCards();
+      await this.setQuickCards();
       this.$tour.start(this.tourName);
     });
   },
@@ -202,7 +203,7 @@ export default {
     },
     updateDynamicFilterValues(key, filters) {
       this.dynamicFilterValues[key] = filters;
-
+      this.showDashboard = true;
     },
     async getDashboardByModule() {
       try {
@@ -213,7 +214,6 @@ export default {
           this.dashboards = this.dashboards.filter(dashboard => this.$hasAccess(dashboard.permission));
           this.tab = this.dashboards[0]?.name || 'main'
           await this.setDashboardFilters();
-          this.showDashboard = true;
         }
 
       } catch (error) {
@@ -222,7 +222,6 @@ export default {
     },
     async setDashboardFilters(){
       this.dashboards.forEach((dashboard) => {
-        this.dynamicFilterValues[dashboard.name] = dashboard?.filters || {};
         this.showDynamicFilterModal[dashboard.name] = false;
       })
     }
