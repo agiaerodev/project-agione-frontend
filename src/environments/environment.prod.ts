@@ -1,5 +1,5 @@
 const environment = {
-  baseUrl: 'https://app-agione-prod-use2-01.azurewebsites.net',
+  baseUrl: 'https://one-prod.allianceground.com',
   kbBaseUrl: 'https://kb.agi.aero',
 }
 
