@@ -111,6 +111,14 @@ export default function controller(props: ControllerProps) {
             query: {fromCache: 1}
           })
         },
+        // {
+        //   name: 'whatIsNew',
+        //   label: 'What´s New',
+        //   props: {
+        //     icon: 'fa-light fa-bullhorn'
+        //   },
+        //   action: () => {}
+        // },
         ...customBtns
       ].map(btn => {
         const button = btn;

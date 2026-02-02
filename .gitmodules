@@ -67,3 +67,9 @@
 [submodule "src/modules/qreports"]
 	path = src/modules/qreports
 	url = https://github.com/agiaerodev/qreports.git
+[submodule "src/modules/qsecurityaudit"]
+	path = src/modules/qsecurityaudit
+	url = https://github.com/agiaerodev/qsecurityaudit.git
+[submodule "src/modules/qmxaudit"]
+	path = src/modules/qmxaudit
+	url = https://github.com/agiaerodev/qmxaudit.git

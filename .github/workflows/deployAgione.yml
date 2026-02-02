@@ -49,7 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
+          npm install --global yarn
+          echo "Install node Dependencies"
+          yarn
       - name: Initialize and update submodules
         run: |
           branch="staging"
