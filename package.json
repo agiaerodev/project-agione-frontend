@@ -8,9 +8,13 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test": "echo \"No test specified\" && exit 0",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "test:e2e": "cross-env NODE_ENV=test start-test \"quasar dev\" http-get://127.0.0.1:8080 \"cypress open --e2e\"",
+    "test:e2e:ci": "cross-env NODE_ENV=test start-test \"quasar dev\" http-get://127.0.0.1:8080 \"cypress run --e2e\"",
+    "test:component": "cross-env NODE_ENV=test cypress open --component",
+    "test:component:ci": "cross-env NODE_ENV=test cypress run --component"
   },
   "dependencies": {
     "@azure/msal-browser": "^3.9.0",
@@ -21,6 +25,7 @@
     "@quasar/quasar-ui-qcalendar": "^4.0.0-beta.16",
     "@tkmam1x/vue3-treeselect": "^0.1.15",
     "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "@vueuse/core": "^14.0.0",
     "autoprefixer": "^10.4.17",
     "axios": "^1.2.1",
     "chart.js": "^4.4.1",
@@ -61,12 +66,15 @@
   "devDependencies": {
     "@playwright/test": "^1.51.1",
     "@quasar/app-webpack": "^3.9.2",
+    "@quasar/quasar-app-extension-testing-e2e-cypress": "^6.2.1",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "crypto-js": "^4.2.0",
+    "cypress": "^14.2.1",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-cypress": "^3.6.0",
     "eslint-plugin-vue": "^9.0.0",
     "prettier": "^2.5.1",
     "webpack-bundle-analyzer": "^4.10.1",
