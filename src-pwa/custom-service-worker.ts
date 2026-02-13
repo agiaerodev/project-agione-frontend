@@ -24,11 +24,12 @@ self.skipWaiting()
 // takes control of existing client windows (browser tabs)
 // that are still controlled by a previous Service Worker.
 clientsClaim();
+const SW_VERSION = Date.now().toString()
 
 setCacheNameDetails({
   prefix: 'compile-time',
   precache: 'precache',
-  suffix: 'v2',
+  suffix: SW_VERSION,
 })
 
 // Use with precache injection
@@ -310,7 +311,7 @@ const saveExecutedRequests = async (request, id: number, status: string) => {
 
   const { request: requestsExecuted, storage } = await executeTransaction(
     NAME_OBJECT_STORE,
-    KEY_REQUESTS_IN_STORAGE, 
+    KEY_REQUESTS_IN_STORAGE,
   )
 
   const storedData = requestsExecuted.result?.requests || [];
@@ -360,10 +361,10 @@ const queue = new Queue(QUEUE_NAME, {
     let entry;
     const retryCounters = new Map<string, number>();
     postMessage('synchronizing-data');
-    
+
     while (entry = await queue.shiftRequest()) {
       if (!navigator.onLine) {
-        await queue.unshiftRequest(entry); 
+        await queue.unshiftRequest(entry);
         break
       }
       try {
@@ -437,7 +438,7 @@ self.addEventListener('fetch', (event: any) => {
     } catch (error) {
       const path = new URL(event.request.url).pathname;
       const offlineActive = await getOfflineSetting()
-      
+
       if (path.startsWith('/api/') && !navigator.onLine && offlineActive) {
 
         let requestId = null;
@@ -504,7 +505,7 @@ self.addEventListener('message', async (event) => {
     if (syncQueue.length > 0) {
       setTimeoutId = setTimeout(async () => {
         await handleSync()
-      }, SYNC_EVENT_TIMEOUT)  
+      }, SYNC_EVENT_TIMEOUT)
     }
   }
 });
