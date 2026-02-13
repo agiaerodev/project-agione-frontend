@@ -1,5 +1,6 @@
 import { register } from 'register-service-worker';
 import eventBus from 'src/plugins/eventBus';
+import env from 'src/environments/environment'
 
 // The ready(), registered(), cached(), updatefound() and updated()
 // events passes a ServiceWorkerRegistration instance in their arguments.
@@ -30,7 +31,9 @@ register(process.env.SERVICE_WORKER_FILE, {
 
   updated (/* registration */) {
     console.log('New content is available; please refresh.')
-    window.location.reload()
+    if(env?.production) {
+      window.location.reload()
+    }
   },
 
   offline () {
