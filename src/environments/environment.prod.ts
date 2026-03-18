@@ -1,5 +1,5 @@
 const environment = {
-  production: true,
+  production: false,
   baseUrl: 'https://one-prod.allianceground.com',
   kbBaseUrl: 'https://kb.agi.aero',
 }
