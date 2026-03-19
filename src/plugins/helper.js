@@ -756,6 +756,20 @@ class Helper {
 
     return params;
   }
+
+  buildFileNameWithFilters = (fileName, filterSummary) => {
+    if (
+      !filterSummary || 
+      (Object.keys(filterSummary).length === 0)
+    ) return fileName
+  
+    const filters = Object.values(filterSummary)
+      .filter(item => item.label && item.option)
+      .map(item => `${item.label}=${item.option}`)
+      .join(', ')
+  
+    return `${fileName}${filters ? ` (${filters})` : ''}`;
+  }
 }
 
 const helper = new Helper();
