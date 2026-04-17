@@ -770,6 +770,18 @@ class Helper {
   
     return `${fileName}${filters ? ` (${filters})` : ''}`;
   }
+  
+  isValidFullDateHour(val) {
+    if (!val) return true
+    const timeMatch = val.match(/(\d{2}):(\d{2})/)
+    if (timeMatch) {
+      const hours = parseInt(timeMatch[1])
+      const minutes = parseInt(timeMatch[2])
+      if (hours > 23) return null
+      if (minutes > 59) return null
+    }
+    return true
+  }
 }
 
 const helper = new Helper();
