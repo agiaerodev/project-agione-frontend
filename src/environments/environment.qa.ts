@@ -1,4 +1,5 @@
 const environment = {
+  production: true,
   baseUrl: 'https://app-agione-stag-v8-use3-01.azurewebsites.net',
   kbBaseUrl: 'https://kb.agi.aero',
 }

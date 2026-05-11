@@ -24,11 +24,12 @@ self.skipWaiting()
 // takes control of existing client windows (browser tabs)
 // that are still controlled by a previous Service Worker.
 clientsClaim();
+const SW_VERSION = Date.now().toString()
 
 setCacheNameDetails({
   prefix: 'compile-time',
   precache: 'precache',
-  suffix: 'v2',
+  suffix: SW_VERSION,
 })
 
 // Use with precache injection
@@ -74,52 +75,6 @@ const KEY_REQUESTS_IN_STORAGE = 'requests';
 const SYNC_EVENT_TRIGGER_MESSAGE_NAME = 'trigger-sync-event';
 const SYNC_EVENT_TIMEOUT = 5000;
 let setTimeoutId = null;
-// const CACHE_NAME = 'runtime-cache';
-
-// const plugins = [
-//   new ExpirationPlugin({
-//     maxEntries: 50,
-//     maxAgeSeconds: 60 * 60 // 1 Hour
-//   })
-// ];
-
-// const match = request => {
-//   const url = new URL(request.request.url);
-//   const isApi = url.pathname.startsWith('/api/');
-
-//   const isRefresh = request.request.headers.get('x-refresh');
-//   const cache = request.request.headers.get('x-cache');
-
-//   return { isApi, isRefresh, cache };
-// };
-
-// const matchNetworkFirst = request => {
-//   const { isApi, isRefresh, cache } = match(request);
-
-//   return isApi && isRefresh && !cache;
-// };
-
-// const matchCacheFirst = request => {
-//   const { isApi, isRefresh, cache } = match(request);
-
-//   return isApi && !isRefresh && !cache;
-// };
-
-// registerRoute(
-//   matchNetworkFirst,
-//   new NetworkFirst({
-//     cacheName: CACHE_NAME,
-//     plugins
-//   }));
-
-// registerRoute(
-//   matchCacheFirst,
-//   new CacheFirst({
-//     cacheName: CACHE_NAME,
-//     plugins
-//   })
-// );
-
 const postMessage = (message: string) => {
   (self as any).clients.matchAll()
     .then(clients => {
@@ -310,7 +265,7 @@ const saveExecutedRequests = async (request, id: number, status: string) => {
 
   const { request: requestsExecuted, storage } = await executeTransaction(
     NAME_OBJECT_STORE,
-    KEY_REQUESTS_IN_STORAGE, 
+    KEY_REQUESTS_IN_STORAGE,
   )
 
   const storedData = requestsExecuted.result?.requests || [];
@@ -360,10 +315,10 @@ const queue = new Queue(QUEUE_NAME, {
     let entry;
     const retryCounters = new Map<string, number>();
     postMessage('synchronizing-data');
-    
+
     while (entry = await queue.shiftRequest()) {
       if (!navigator.onLine) {
-        await queue.unshiftRequest(entry); 
+        await queue.unshiftRequest(entry);
         break
       }
       try {
@@ -437,7 +392,7 @@ self.addEventListener('fetch', (event: any) => {
     } catch (error) {
       const path = new URL(event.request.url).pathname;
       const offlineActive = await getOfflineSetting()
-      
+
       if (path.startsWith('/api/') && !navigator.onLine && offlineActive) {
 
         let requestId = null;
@@ -504,7 +459,21 @@ self.addEventListener('message', async (event) => {
     if (syncQueue.length > 0) {
       setTimeoutId = setTimeout(async () => {
         await handleSync()
-      }, SYNC_EVENT_TIMEOUT)  
+      }, SYNC_EVENT_TIMEOUT)
     }
   }
 });
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (!key.includes(SW_VERSION)) {
+            return caches.delete(key)
+          }
+        })
+      )
+    })
+  )
+})

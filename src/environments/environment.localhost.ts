@@ -1,4 +1,5 @@
 const environment = {
+  production: true,
   baseUrl: 'https://localhost:7116',
   kbBaseUrl: 'https://kb.agi.aero',
 }
