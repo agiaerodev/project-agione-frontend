@@ -53,6 +53,49 @@
     >
       <offline/>
     </q-drawer>
+
+      <q-dialog
+        v-model="drawer.askAgi"
+        persistent
+        transition-show="scale"
+        transition-hide="scale"
+      >
+        <q-card class="tw-relative tw-w-full tw-max-w-[700px] tw-h-[85vh] tw-max-h-[900px] tw-rounded-2xl tw-shadow-2xl tw-bg-white tw-overflow-hidden">
+
+          <!-- Botón de cerrar flotante -->
+          <q-btn
+            flat
+            round
+            dense
+            icon="fa-light fa-xmark"
+            v-close-popup
+            class="tw-absolute tw-top-2.5 tw-right-2.5 tw-z-50 tw-bg-black/20 hover:tw-bg-black/40 tw-text-white tw-transition-all"
+          />
+
+          <!-- Loader (Se muestra mientras el iframe carga) -->
+          <div
+            v-if="isLoadingIframe"
+            class="tw-absolute tw-inset-0 tw-z-40 tw-flex tw-flex-col tw-items-center tw-justify-center tw-bg-slate-900/90 tw-backdrop-blur-sm tw-text-white"
+          >
+            <q-spinner-dots color="primary" size="3em" />
+            <span class="tw-mt-3 tw-text-sm tw-font-medium tw-tracking-wide tw-animate-pulse">
+          Loading assistant...
+        </span>
+          </div>
+
+          <!-- Contenedor del Chat / Iframe -->
+          <q-card-section class="tw-p-0 tw-w-full tw-h-full">
+            <iframe
+              src="https://copilotstudio.microsoft.com/environments/Default-7e761206-66fa-448b-a3e6-6c0660e38ed5/bots/crbba_AskAGIOne/webchat?__version__=2"
+              frameborder="0"
+              allow="microphone; clipboard-write"
+              class="tw-w-full tw-h-full tw-border-none"
+              @load="onIframeLoaded"
+            ></iframe>
+          </q-card-section>
+
+        </q-card>
+      </q-dialog>
   </div>
 </template>
 <script>
@@ -96,6 +139,7 @@ export default {
       projectName: this.$getSetting('core::site-name'),
       logo: this.$store.state.qsiteApp.logo,
       miniState: false,
+      isLoadingIframe: true,
       drawer: {
         menu: false,
         config: false,
@@ -103,7 +147,8 @@ export default {
         checkin: false,
         recommendation: false,
         notification: false,
-        offline: false
+        offline: false,
+        askAgi: false
       },
       appConfig: config('app'),
       eventBus
@@ -112,6 +157,11 @@ export default {
   watch: {
     routeSubHeader() {
       this.drawer.recommendation = false
+    },
+    'drawer.askAgi'(isOpen) {
+      if (isOpen) {
+        this.isLoadingIframe = true
+      }
     }
   },
   computed: {
@@ -205,7 +255,12 @@ export default {
       } else {
         this.drawer[drawerName] = !this.drawer[drawerName]
       }
-    }
+    },
+    onIframeLoaded() {
+      setTimeout(() => {
+        this.isLoadingIframe = false
+      }, 800)
+    },
   }
 }
 </script>
@@ -326,6 +381,24 @@ export default {
         border-radius: 0 !important;
       }
     }
+  }
+  .ask-agi-modal {
+    width: 60vw;
+    max-width: 1100px;
+    min-width: 900px;
+    height: 80vh;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .body-chat {
+    height: calc(80vh - 120px);
+  }
+
+  .chat-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
   }
 }
 </style>
