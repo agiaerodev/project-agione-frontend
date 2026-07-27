@@ -174,7 +174,19 @@ export default function controller(props: ControllerProps) {
       ].sort((a, b) => (a.order || defOrder) - (b.order || defOrder));
 
       return {
-        buttons: orderedBtns,
+        buttons: [{
+          name: 'ask-agione',
+          label: 'Ask AGIOne',
+          props: {
+            label: 'Ask AGIOne',
+            icon: 'fa-solid fa-sparkles',
+            round: false,
+            square: true,
+          },
+          action: () => {
+            eventBus.emit('toggleMasterDrawer', 'askAgi');
+          }
+        },...orderedBtns],
         menu: orderedMenus,
         ...(props.replaceActions || {})
       };
