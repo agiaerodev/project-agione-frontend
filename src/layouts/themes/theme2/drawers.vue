@@ -53,49 +53,35 @@
     >
       <offline/>
     </q-drawer>
-
-      <q-dialog
-        v-model="drawer.askAgi"
-        persistent
-        transition-show="scale"
-        transition-hide="scale"
-      >
-        <q-card class="tw-relative tw-w-full tw-max-w-[700px] tw-h-[85vh] tw-max-h-[900px] tw-rounded-2xl tw-shadow-2xl tw-bg-white tw-overflow-hidden">
-
-          <!-- Botón de cerrar flotante -->
+    <div
+      v-show="drawer.askAgi"
+      class="tw-fixed tw-inset-0 tw-z-[9999] tw-flex tw-items-center tw-justify-center tw-bg-black/60"
+    >
+      <transition name="ask-agi">
+        <q-card
+          v-show="drawer.askAgi"
+          class="tw-relative tw-w-full tw-max-w-[700px] tw-h-[85vh] tw-max-h-[900px] tw-rounded-2xl tw-shadow-2xl tw-bg-white tw-overflow-hidden"
+        >
+          <!-- Botón cerrar -->
           <q-btn
             flat
             round
             dense
             icon="fa-light fa-xmark"
-            v-close-popup
-            class="tw-absolute tw-top-2.5 tw-right-2.5 tw-z-50 tw-bg-black/20 hover:tw-bg-black/40 tw-text-white tw-transition-all"
+            @click="closeAskAgi"
+            class="tw-absolute tw-top-2.5 tw-right-2.5 tw-z-50 tw-bg-black/20 hover:tw-bg-black/40 tw-text-white"
           />
 
-          <!-- Loader (Se muestra mientras el iframe carga) -->
-          <div
-            v-if="isLoadingIframe"
-            class="tw-absolute tw-inset-0 tw-z-40 tw-flex tw-flex-col tw-items-center tw-justify-center tw-bg-slate-900/90 tw-backdrop-blur-sm tw-text-white"
-          >
-            <q-spinner-dots color="primary" size="3em" />
-            <span class="tw-mt-3 tw-text-sm tw-font-medium tw-tracking-wide tw-animate-pulse">
-          Loading assistant...
-        </span>
-          </div>
-
-          <!-- Contenedor del Chat / Iframe -->
-          <q-card-section class="tw-p-0 tw-w-full tw-h-full">
-            <iframe
-              src="https://copilotstudio.microsoft.com/environments/Default-7e761206-66fa-448b-a3e6-6c0660e38ed5/bots/crbba_AskAGIOne/webchat?__version__=2"
-              frameborder="0"
-              allow="microphone; clipboard-write"
-              class="tw-w-full tw-h-full tw-border-none"
-              @load="onIframeLoaded"
-            ></iframe>
-          </q-card-section>
-
+          <iframe
+            ref="askAgiIframe"
+            src="https://copilotstudio.microsoft.com/environments/Default-7e761206-66fa-448b-a3e6-6c0660e38ed5/bots/crbba_AskAGIOne/webchat?__version__=2"
+            frameborder="0"
+            allow="microphone; clipboard-write"
+            class="tw-w-full tw-h-full tw-border-none"
+          />
         </q-card>
-      </q-dialog>
+      </transition>
+    </div>
   </div>
 </template>
 <script>
@@ -256,10 +242,8 @@ export default {
         this.drawer[drawerName] = !this.drawer[drawerName]
       }
     },
-    onIframeLoaded() {
-      setTimeout(() => {
-        this.isLoadingIframe = false
-      }, 800)
+    closeAskAgi() {
+      this.drawer.askAgi = false
     },
   }
 }
@@ -382,23 +366,21 @@ export default {
       }
     }
   }
-  .ask-agi-modal {
-    width: 60vw;
-    max-width: 1100px;
-    min-width: 900px;
-    height: 80vh;
-    border-radius: 16px;
-    overflow: hidden;
-  }
+}
+.ask-agi-enter-active,
+.ask-agi-leave-active {
+  transition: all .35s cubic-bezier(.19,1,.22,1);
+}
 
-  .body-chat {
-    height: calc(80vh - 120px);
-  }
+.ask-agi-enter-from,
+.ask-agi-leave-to {
+  opacity: 0;
+  transform: translateY(60px);
+}
 
-  .chat-frame {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
+.ask-agi-enter-to,
+.ask-agi-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
