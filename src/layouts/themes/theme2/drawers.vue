@@ -56,10 +56,9 @@
     <q-drawer
       v-model="drawer.askAgi"
       side="right"
-      overlay
       bordered
       :width="500"
-      class="tw-z-[9999]"
+      class="no-shadow"
     >
       <div class="tw-relative tw-w-full tw-h-full">
         <q-btn
