@@ -53,35 +53,33 @@
     >
       <offline/>
     </q-drawer>
-    <div
-      v-show="drawer.askAgi"
-      class="tw-fixed tw-inset-0 tw-z-[9999] tw-flex tw-items-center tw-justify-center tw-bg-black/60"
+    <q-drawer
+      v-model="drawer.askAgi"
+      side="right"
+      overlay
+      bordered
+      :width="500"
+      class="tw-z-[9999]"
     >
-      <transition name="ask-agi">
-        <q-card
-          v-show="drawer.askAgi"
-          class="tw-relative tw-w-full tw-max-w-[700px] tw-h-[85vh] tw-max-h-[900px] tw-rounded-2xl tw-shadow-2xl tw-bg-white tw-overflow-hidden"
-        >
-          <!-- Botón cerrar -->
-          <q-btn
-            flat
-            round
-            dense
-            icon="fa-light fa-xmark"
-            @click="closeAskAgi"
-            class="tw-absolute tw-top-2.5 tw-right-2.5 tw-z-50 tw-bg-black/20 hover:tw-bg-black/40 tw-text-white"
-          />
+      <div class="tw-relative tw-w-full tw-h-full">
+        <q-btn
+          flat
+          round
+          dense
+          icon="fa-light fa-xmark"
+          @click="closeAskAgi"
+          class="tw-absolute tw-top-2.5 tw-right-2.5 tw-z-50 tw-bg-black/20 hover:tw-bg-black/40 tw-text-white"
+        />
 
-          <iframe
-            ref="askAgiIframe"
-            src="https://copilotstudio.microsoft.com/environments/Default-7e761206-66fa-448b-a3e6-6c0660e38ed5/bots/crbba_AskAGIOne/webchat?__version__=2"
-            frameborder="0"
-            allow="microphone; clipboard-write"
-            class="tw-w-full tw-h-full tw-border-none"
-          />
-        </q-card>
-      </transition>
-    </div>
+        <iframe
+          ref="askAgiIframe"
+          src="https://copilotstudio.microsoft.com/environments/Default-7e761206-66fa-448b-a3e6-6c0660e38ed5/bots/crbba_AskAGIOne/webchat?__version__=2"
+          frameborder="0"
+          allow="microphone; clipboard-write"
+          class="tw-w-full tw-h-full tw-border-none"
+        />
+      </div>
+    </q-drawer>
   </div>
 </template>
 <script>
