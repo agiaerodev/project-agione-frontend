@@ -42,6 +42,18 @@ jobs:
             echo "Using localhost environment"
             cp src/environments/environment.localhost.ts src/environments/environment.ts
           fi
+      - name: Configure Font Awesome Pro authentication
+        env:
+          FONTAWESOME_TOKEN: ${{ secrets.FONTAWESOME_TOKEN }}
+        shell: bash
+        run: |
+          if [[ -z "$FONTAWESOME_TOKEN" ]]; then
+            echo "::error::Missing FONTAWESOME_TOKEN secret. Configure a valid Font Awesome Pro package manager token."
+            exit 1
+          fi
+          npm config set --location=project '@fortawesome:registry' 'https://npm.fontawesome.com/'
+          npm config set --location=project '//npm.fontawesome.com/:_authToken' "$FONTAWESOME_TOKEN"
+
       - name: Install Quasar CLI
         run: |
           npm cache clean --force
@@ -104,4 +116,3 @@ jobs:
                  "content": "⏹️ **Build canceled!**\n📂 **Branch:** '"$BRANCH_NAME"'\n⚠️ Workflow execution was stopped."
                }' \
                "https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX"
-
