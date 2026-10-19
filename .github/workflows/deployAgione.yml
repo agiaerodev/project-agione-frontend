@@ -53,6 +53,14 @@ jobs:
           fi
           npm config set --location=project '@fortawesome:registry' 'https://npm.fontawesome.com/'
           npm config set --location=project '//npm.fontawesome.com/:_authToken' "$FONTAWESOME_TOKEN"
+          printf '\nalways-auth=true\n' >> .npmrc
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${FONTAWESOME_TOKEN}" \
+            'https://npm.fontawesome.com/@fortawesome/fontawesome-pro/-/6.5.1/fontawesome-pro-6.5.1.tgz')
+          if [[ "$status" != "200" ]]; then
+            echo "::error::Font Awesome Pro download check failed (HTTP ${status}). Verify the FONTAWESOME_TOKEN package manager token and its access to fontawesome-pro 6.5.1."
+            exit 1
+          fi
 
       - name: Install Quasar CLI
         run: |
