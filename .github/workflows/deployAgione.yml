@@ -104,3 +104,4 @@ jobs:
                  "content": "⏹️ **Build canceled!**\n📂 **Branch:** '"$BRANCH_NAME"'\n⚠️ Workflow execution was stopped."
                }' \
                "https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX"
+
